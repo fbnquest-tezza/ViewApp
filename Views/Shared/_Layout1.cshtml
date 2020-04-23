@@ -1,0 +1,172 @@
+﻿@{
+    string fName = User.FindFirst("given_name")?.Value;
+    string lName = User.FindFirst("family_name")?.Value;
+    string email = User.FindFirst("email")?.Value;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>CMS</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="~/layout/fonts/font-awesome.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="~/layout/css/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/lib/responsive.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/select2/select2.css" rel="stylesheet" />
+    <link href="~/lib/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="~/lib/datepicker/css/datepicker.css" rel="stylesheet" />
+    <style>
+        body{
+            font-size:13px;
+        }
+        #sidebar{
+            font-size:13px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar">
+            <div class="custom-menu">
+                <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                    <i class="fa fa-bars"></i>
+                    <span class="sr-only">Toggle Menu</span>
+                </button>
+            </div>
+            <div class="p-4">
+                <h1><a href="#" class="logo">CMS <span>@*Portfolio Agency*@</span></a></h1>
+                <ul class="list-unstyled components mb-5">
+                    <li class="active">
+                        <a href="#"><span class="fa fa-user mr-3"></span> Admin</a>
+                    </li>
+                    <li>
+                        <a href="#"><span class="fa fa-address-book mr-3"></span> Rates</a>
+                    </li>
+                    <li>
+                        <a href="#homeSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <span class="fa fa-opera mr-3"></span> Operations
+                        </a>
+                        <ul class="collapse list-unstyled" id="homeSubmenu3">
+                            <li>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Cars" asp-action="SellVehicle"> <span class="fa fa-sellsy mr-3"></span>Sell Vehicle </a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Cars" asp-action="LeaseVehicle"> <span class="fa fa-paypal mr-3"></span>Lease</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <span class="fa fa-archive mr-3"></span> Fleet
+                        </a>
+                        <ul class="collapse list-unstyled" id="homeSubmenu">
+                            <li>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Cars" asp-action="AddNewCar"> <span class="fa fa-plus mr-3"></span>New Vehicle</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Cars" asp-action="GetAllCars"> <span class="fa fa-bars mr-3"></span>All Vehicles</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Report" asp-action="SearchFleet"> <span class="fa fa-history mr-3"></span>Search Fleet</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#homeSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <span class="fa fa-book mr-3"></span> Reports
+                        </a>
+                        <ul class="collapse list-unstyled" id="homeSubmenu2">
+                            <li>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Report" asp-action="SalesHistory"> <span class="fa fa-search mr-3"></span>Sales History</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Report" asp-action="LeaseHistory"> <span class="fa fa-automobile mr-3"></span>Leases History</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><span class="fa fa-suitcase mr-3"></span> Gallery</a>
+                    </li>
+                    <li>
+                        <a href="#"><span class="fa fa-send-o mr-3"></span> Services</a>
+                    </li>
+                    <li>
+                        <a href="#"><span class="fa fa-paper-plane mr-3"></span> Contacts</a>
+                    </li>
+                </ul>
+
+                <div class="mb-5">
+                    <h3 class="h6 mb-3">Subscribe for newsletter</h3>
+                    <form action="#" class="subscribe-form">
+                        <div class="form-group d-flex">
+                            <div class="icon"><span class="icon-paper-plane"></span></div>
+                            <input type="text" class="form-control" placeholder="Enter Email Address">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="footer">
+                    <p>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright &copy;
+                        <script>document.write(new Date().getFullYear());</script>
+                    </p>
+                </div>
+
+            </div>
+        </nav>
+        <!-- Page Content  -->
+        <div id="content" class="p-4 p-md-5 pt-5">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <partial name="_LoginPartial" />
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            @RenderBody()
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery/dist/jquery-ui.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/fontawesome/js/fontawesome.js"></script>
+    <script src="~/lib/jsrender/jsrender.min.js"></script>
+    @*<script src="~/layout/js/jquery.min.js"></script>*@
+    <script src="~/layout/js/popper.js"></script>
+    <script src="~/layout/js/bootstrap.min.js"></script>
+    <script src="~/layout/js/main.js"></script>
+    <script src="~/lib/moment.js"></script>
+    @*<script src="~/lib/scripts.bundle.js" type="text/javascript"></script>*@
+    <script src="~/lib/sweetalert/sweetalert.js"></script>
+    @*<script src="~/lib/fullcalendar/fullcalendar.bundle.js"></script>*@
+    <script src="~/lib/datepicker/js/datepicker.js"></script>
+    <script src="~/lib/blockUI/jquery.blockUI.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery.dataTables.min.js"></script>
+    <script src="~/lib/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/responsive.bootstrap.min.js"></script>
+    <script src="~/js/moment.js"></script>
+    <script src="~/lib/dataTables.buttons.min.js"></script>
+    <script src="~/lib/buttons.html5.min.js"></script>
+    <script src="~/lib/buttons.print.min.js"></script>
+    <script src="~/lib/buttons.colVis.min.js"></script>
+    <script src="~/lib/pdfmake.js"></script>
+    <script src="~/lib/jszip.min.js"></script>
+    <script src="~/lib/select2/select2.js"></script>
+    @RenderSection("Scripts", required: false)
+    @RenderSection("Styles", required: false)
+</body>
+</html>

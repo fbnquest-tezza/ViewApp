@@ -1,0 +1,301 @@
+﻿@model CarSearchDTO
+@{
+
+    ViewData["Title"] = "Search Fleet";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    var error = TempData["error"] as string;
+}
+
+<h1 class="text-muted"><b>Search Fleet</b></h1>
+<div class="m-alert m-alert--icon m-alert--air m-alert--square alert alert-dismissible m--margin-bottom-30" role="alert">
+    <div class="m-alert__icon">
+        <i class="flaticon-exclamation m--font-brand"></i>
+    </div>
+    <div class="m-alert__text">
+    </div>
+</div>
+<div class="m-alert m-alert--icon m-alert--air m-alert--square alert alert-dismissible m--margin-bottom-30" role="alert">
+    <div class="m-alert__icon">
+        <i class="flaticon-exclamation m--font-brand"></i>
+    </div>
+    <form class="m-alert__text">
+        <div class="m-portlet__body">
+            <div class="form-group m-form__group row">
+                <div class="col-lg-3">
+                    <label>Least Amount</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <input class="form-control" type="number" asp-for="leastAmount" placeholder="Enter a Minimum Amount" name="leastAmount" id="leastAmount" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Max Amount</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <input class="form-control" type="number" asp-for="maxAmount" placeholder="Enter a Maximum Amount" name="maxAmount" id="maxAmount" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Select a Terminal</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <select id="locationId" asp-for="locationId" class="form-control m-input dropdown-select2 veh" asp-items="ViewBag.location as IEnumerable<SelectListItem>">
+                            <option value="" id="TerId">Select a Terminal</option>
+                        </select>
+                        <div class="form-control-feedback"><span asp-validation-for="locationId"></span></div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Vehicle Color:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <select asp-for="Colors" id="Colors" style="height:50px !important" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarColor>())">
+                            <option value="" id="Color">Select Vehicle Color</option>
+                        </select>
+                        <div class="form-control-feedback"><span asp-validation-for="Colors"></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group m-form__group row">
+
+                <div class="col-lg-3">
+                    <label>Vehicle Status :</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <select asp-for="Statuses" id="Statuses" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarStatus>())">
+                            <option value="" id="Status">Select Vehicle Status</option>
+                        </select>
+                        <div class="form-control-feedback"><span asp-validation-for="Statuses"></span></div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Manufacturer: </label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <select id="carManufacturerId" asp-for="carManufacturerId" asp-items="ViewBag.CarManufacturer as IEnumerable<SelectListItem>" class="form-control dropdown-select2">
+                            <option value="" id="carmanId">Select a Vehicle Manufacturer</option>
+                        </select>
+                        <div class="form-control-feedback"><span asp-validation-for="carManufacturerId"></span></div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Vehicle Status :</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <select asp-for="carType" id="carType" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarType>())">
+                            <option value="" id="Type">Select Car Type</option>
+                        </select>
+                        <div class="form-control-feedback"><span asp-validation-for="carType"></span></div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Vehice Condition:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <select asp-for="Conditions" id="Conditions" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarCondition>())">
+                            <option value="" id="Condition">Select Vehicle Condition</option>
+                        </select>
+                        <div class="form-control-feedback"><span asp-validation-for="Conditions"></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group m-form__group row">
+                <div class="col-lg-4">
+                    <label>Production Year:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <input class="form-control datepicker" asp-for="ProductionDate" type="text" placeholder="Enter Year (If Any)" name="ProductionDate" id="ProductionDate" value="@ViewBag.prodDate" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="col-lg-2"></div>
+                <div class="col-lg-4" style="margin-top: 30px;">
+                    <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--pill m-btn--icon m-btn--air" id="btnsearch"><i class="fa fa-search"></i> Search </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="m-portlet m-portlet--mobile">
+    <div class="m-portlet__head">
+        <div class="m-portlet__head-caption">
+            <div class="m-portlet__head-title" id="head">
+                <h3 class="text-muted">
+                   <b> Fleet  Details </b>
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="m-portlet__body">
+        <table class="table table-striped- table-bordered table-hover table-checkable" id="inventoryTable2">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th> Name</th>
+                    <th> Reg No. </th>
+                    <th> Manufacturer </th>
+                    <th> Location </th>
+                    <th> Retail  </th>
+                    <th> Type </th>
+                    <th> Condition </th>
+                    <th> Color</th>
+                    <th> Status </th>
+                    <th> Year </th>
+                    <th> Actions</th>
+                </tr>
+            </thead>
+        </table>
+        @Html.AntiForgeryToken()
+    </div>
+</div>
+
+@section Styles
+{
+    <style>
+        .datepicker {
+            width: 16em !important;
+        }
+
+        .divrow {
+            border-radius: 4px;
+        }
+
+        select {
+            height: 70px;
+            margin: 10px;
+        }
+
+            select:focus {
+                min-width: 150px;
+                width: auto;
+            }
+    </style>
+}
+@section Scripts
+{
+    <script type="text/javascript">
+
+        var dataTable2;
+        $(".datepicker").datepicker();
+
+        $(document).ready(function () {
+            $(".dropdown-select2").select2();
+        });
+        $(document).on("click", "#btnsearch", function () {
+            var leastAmount = $("#leastAmount").val();
+            var maxAmount = $("#maxAmount").val();
+            var locationId = $("#locationId").val();
+            var Colors = $("#Colors").val();
+            var Statuses = $("#Statuses").val();
+            var carManufacturerId = $("#carManufacturerId").val();
+            var carType = $("#carType").val();
+            var Conditions = $("#Conditions").val();
+            var ProductionDate = $("#ProductionDate").val();
+
+            dataTable2 = $("#inventoryTable2").DataTable({
+                "destroy": true,
+                "orderable": false,
+                "searchable": false,
+                "responsive": true,
+                "dom": 'lBfrtip',
+                "buttons": [
+                    {
+                        extend: 'csv',
+                        messageTop: 'Fleet Details',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'excel',
+                        messageTop: 'Fleet Details',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-secondary'
+                    },
+                    {
+                        extend: 'print',
+                        messageTop: 'Fleet Details',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-primary'
+                    }
+                ],
+                 "ajax": {
+                    "url": "@Url.Action("searchfleetpost", "Report")",
+                    "type": "POST",
+                    "data": {
+                        leastAmount: leastAmount,
+                        maxAmount: maxAmount,
+                        locationId: locationId,
+                        Colors: Colors,
+                        Statuses: Statuses,
+                        carManufacturerId: carManufacturerId,
+                        carType: carType,
+                        Conditions: Conditions,
+                        ProductionDate: ProductionDate
+                    }
+                },
+                "dataSrc": function (data) {
+                    if (data == "no data") {
+                        return { data: [] }
+                    }
+                },
+                "columns": [
+                    {
+                        "data": "id",
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    { "data": "name" },
+                    { "data": "regNumber" },
+                    { "data": "carManufacturerName" },
+                    { "data": "locationName" },
+                    { "data": "retailPrice" },
+                    { "data": "carTypes" },
+                    { "data": "condition" },
+                    { "data": "color" },
+                    { "data": "status" },
+                    { "data": "productionYear" },
+                    {
+                        render: function (a, t, data, n) {
+                            return `\n <div style="text-align: center">\n
+                                                   \n <div class="btn-group">\n
+                                                       <button type="button" class="btn btn-danger dropdown-toggle" style="font-size: 13px;" data-toggle="dropdown">More
+                                                        <i class="fa fa-folder"></i>
+                                                        </button>
+                                                         <ul class="dropdown-menu" style="text-align: center; min-width:100% !important" role="menu">
+                                                        <li><a class="edit" href="/Cars/EditVehicle/`+ data.id + `">  Edit   <i class="fa fa-edit"></i></a></li>
+                                                         <li><a class="edit" onclick="return remove(`+ data.id + `)"> Delete  <i class="fa fa-trash"></i></a></li>
+                                                        </ul>
+                                                  \n </div>\n`
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No <b >data</b> found"
+                }
+            });
+            //new $.fn.dataTable.FixedHeader(dataTable);
+        });
+
+    </script>
+}
+@*$.ajax({
+    type: "POST",
+    url: '@Url.Action("Workshop", "Report")',
+    data: {
+    VehicleId: vehId,
+    TerminalId: terminalId,
+    Type: 2,
+    Notes: releaseNote
+    },
+    success: function (response) {
+    if (response)
+    swal("Vehicle released from Workshop","Workshop has released vehicle","success");
+    setTimeout(function () {
+    window.location.replace(window.location.href);
+    }, 1500);
+    }
+    });*@
+
+
+@*"url": '../../report/searchfleetpost/?leastAmount=' + leastAmount + '&maxAmount='
+    + maxAmount + '&locationId=' + locationId + '&Colors=' + Colors + '&Statuses=' + Statuses
+    + '&carManufacturerId=' + carManufacturerId + '&carType=' + carType + '&Conditions=' + Conditions
+    + '&ProductionDate=' + ProductionDate,*@

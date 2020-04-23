@@ -1,0 +1,31 @@
+﻿@{
+    string fName = User.FindFirst("given_name")?.Value;
+    string lName = User.FindFirst("family_name")?.Value;
+    string email = User.FindFirst("email")?.Value;
+}
+    <ul class="navbar-nav">
+        @if ((email != null))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Profile" title="Manage">Hello @(fName + " " + lName)</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Profile" title="Manage">View Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Logoff" title="Bye">Log Off</a>
+            </li>
+            @*<li class="nav-item">
+                <a class="nav-link text-light" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" asp-controller="Account" asp-action="Logout" title="Logout">Logout</a>
+            </li>*@
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link text-light">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-light">Login</a>
+            </li>
+        }
+    </ul>

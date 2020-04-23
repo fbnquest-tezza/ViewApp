@@ -1,0 +1,226 @@
+﻿@model CarsDTO
+@{
+    ViewData["Title"] = "AddNewCar";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    var error = TempData["error"] as string;
+}
+
+    <div class="">
+        <form asp-action="AddCarPost">
+            <div class="divrow" style="text-align:center">
+                <br /><h1 class="text-muted"><b>Add New Vehicle</b></h1><br />
+            </div><hr /><br />
+            @if (!string.IsNullOrEmpty(error))
+            {
+                <div class="alert alert-danger" style="padding: 10px">
+                    @error
+                </div>
+            }
+            <br />
+            <div style="text-align:right;">
+                <h3 class="text-muted"> <i class="fa fa-cab"></i> <b> Vehicle Info</b></h3>
+            </div>
+            <div class="form-group m-form__group row divrow">
+                <div class="col-lg-3">
+                    <label>Name of Vehicle:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <input type="text" id="name" name="name" class="form-control" asp-for="name" placeholder="Enter Name Of Vehicle" />
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Reg Number:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <input id="regNumber" name="regNumber" class="form-control m-input" placeholder="Enter Reg Number" asp-for="regNumber">
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Assign To a Location: </label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <select id="locationid" asp-for="LocationId" asp-items="ViewBag.location as IEnumerable<SelectListItem>" class="form-control dropdown-select2">
+                            <option value="" id="TerId">Select a Location</option>
+                        </select>
+                        <div class="form-control-feedback"><span asp-validation-for="LocationId"></span></div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Engine Number:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <input type="text" id="EngineNumber" name="EngineNumber" class="form-control" asp-for="EngineNumber" placeholder="Enter Engine Number" />
+                    </div>
+                </div>
+            </div><br />
+            <div class="form-group m-form__group row divrow">
+                <div class="col-lg-3">
+                    <label>Vehicle Status :</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <select asp-for="CarType" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarType>())">
+                            <option value="" id="Type">Select Car Type</option>
+                        </select>
+                        <div class="form-control-feedback"><span asp-validation-for="CarType"></span></div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Manufacturer: </label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <select id="CarManufacturerId" asp-for="CarManufacturerId" asp-items="ViewBag.CarManufacturer as IEnumerable<SelectListItem>" class="form-control dropdown-select2">
+                            <option value="" id="carmanId">Select a Vehicle Manufacturer</option>
+                        </select>
+                        <div class="form-control-feedback"><span asp-validation-for="CarManufacturerId"></span></div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Vehice Condition:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <select asp-for="Conditions" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarCondition>())">
+                            <option value="" id="Condition">Select Vehicle Condition</option>
+                        </select>
+                        <div class="form-control-feedback"><span asp-validation-for="Conditions"></span></div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Vehicle Color:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <select asp-for="Colors" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarColor>())">
+                            <option value="" id="Color">Select Vehicle Color</option>
+                        </select>
+                        <div class="form-control-feedback"><span asp-validation-for="Colors"></span></div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="form-group m-form__group row divrow">
+                <div class="col-lg-3">
+                    <label>Retail Price:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <input type="number" id="RetailPrice" name="RetailPrice" class="form-control m-input" placeholder="Enter Retail Price" asp-for="RetailPrice">
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Vehicle Status :</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <select asp-for="Statuses" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarStatus>())">
+                            <option value="" id="Status">Select Vehicle Status</option>
+                        </select>
+                        <div class="form-control-feedback"><span asp-validation-for="Statuses"></span></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <label>Production Date:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <input class="form-control datepicker" asp-for="ProductionDate" type="text" placeholder="Enter Date (If Any)" name="ProductionDate" id="prodDate" value="@ViewBag.prodDate" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="col-lg-3" style="text-align:left !important">
+                    <label>Expiry Date:</label>
+                    <div class="">
+                        <input class="form-control datepicker" type="text" placeholder="Enter Date (If Any)" asp-for="ExpiryDate" name="ExpiryDate" id="expDate" value="@ViewBag.expDate" autocomplete="off" />
+                    </div>
+                </div>
+            </div>
+            <br /> <hr /><br />
+            <div class="divrow" style="text-align:right">
+                <h3 class="text-muted"><i class="fa fa-money"></i><b> Lease Rates</b></h3>
+            </div><hr /><br />
+            <div class="form-row">
+                <div class="col-lg-2">
+                    <label>Hourly:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <input type="number" id="LeasePerHour" name="LeasePerHour" class="form-control" asp-for="LeasePerHour" placeholder="Hourly Rate" />
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <label>Daily:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <input type="number" id="LeasePerDay" name="LeasePerDay" class="form-control" asp-for="LeasePerDay" placeholder="Daily Rate" />
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <label>Weekly:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <input type="number" id="LeasePerWeek" name="LeasePerWeek" class="form-control" asp-for="LeasePerWeek" placeholder="Weekly Rate" />
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Monthly:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <input type="number" id="LeasePerMonth" name="LeasePerMonth" class="form-control" asp-for="LeasePerMonth" placeholder="Monthly Rate" />
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <label>Yearly:</label>
+                    <div class="m-input-icon m-input-icon--right">
+                        <input type="number" id="LeasePerYear" name="LeasePerYear" class="form-control" asp-for="LeasePerYear" placeholder="Yearly Rate" />
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit">
+                <div class="m-form__actions m-form__actions--solid">
+                    <div class="row">
+                        <div class="col-lg-12 m--align-right" style="text-align:center">
+                            <button type="submit" class="btn btn-primary" onclick="return post()" id="btncreate"> <i class="fa fa-plus"> </i> Add New Vehicle</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+@section Styles 
+{
+<style>
+    .datepicker {
+        width: 16em !important;
+    }
+    .divrow {
+        border-radius:4px;
+    }
+
+</style>
+}
+@section Scripts
+{
+    <script type="text/javascript">
+
+        $(".datepicker").datepicker();
+
+        $(document).ready(function () {
+            $(".dropdown-select2").select2();
+        });
+        
+        function post() {
+            var name = $("#name").val();
+            var regNumber = $("#regNumber").val();
+            var locationId = $("#locationid").val();
+            var EngineNumber = $("#EngineNumber").val();
+            var RetailPrice = $("#RetailPrice").val();
+            var carmanId = $("#carmanId").val();
+            var Condition = $("#Condition").val();
+            var Color = $("#Color").val();
+            var Status = $("#Status").val();
+            var Type = $("#Type").val();
+            if (name == "") {
+                swal("", "Name is required", "error")
+                return false;
+            }
+            else if (regNumber == "")
+            {
+                swal("", "Reg Number is required", "error")
+                return false;
+            }
+            else if (EngineNumber == "") {
+                swal("", "Engine Number is required", "error")
+                return false;
+            }
+            else if (locationId == "") {
+                swal("", "Location is required", "error")
+                return false;
+            }
+            else {
+                swal("","Good job", "success")
+                return true;
+            }
+        };
+    </script>
+}

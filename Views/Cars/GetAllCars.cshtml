@@ -1,0 +1,569 @@
+﻿
+@{
+    ViewData["Title"] = "Get All Vehicles";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    var error = TempData["error"] as string;
+}
+<style>
+    * {
+        box-sizing: border-box
+    }
+
+    /* Set height of body and the document to 100% */
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: Arial;
+    }
+
+    /* Style tab links */
+    .tablink {
+        background-color: #555;
+        color: white;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 13px 15px;
+        font-size: 15px;
+        width: 20%;
+    }
+
+        .tablink:hover {
+            background-color: #777;
+        }
+
+    .tabcontent {
+        color: white;
+        display: none;
+        padding: 100px 20px;
+        height: 100%;
+    }
+
+    /*#Home {
+            background-color: red;
+        }*/
+
+    /*#News {
+            background-color: green;
+        }*/
+
+    /*#Contact {
+            background-color: blue;
+        }
+
+        #About {
+            background-color: orange;
+        }*/
+</style>
+<br />
+<div style="text-align:center !important">
+    <h1 style="text-align:center !important" class="text-muted"><b>All Vehicles </b></h1>
+</div>
+<hr />
+<div class="">
+    <button class="tablink" onclick="openPage('Home', this, 'blue')" id="defaultOpen">All Vehicles</button>
+    <button class="tablink" onclick="openPage('News', this, 'grey')">Leased Vehicles</button>
+    <button class="tablink" onclick="openPage('Contact', this, 'green')">Sold Vehicles</button>
+    <button class="tablink" onclick="openPage('About', this, 'orange')">Available Vehicles</button>
+    <button class="tablink" onclick="openPage('Delete', this, 'red')">Deleted Vehicles</button>
+
+    <div id="Home" class="tabcontent">
+        <h3>All Vehicles</h3>
+        <table id="inventoryTable1" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <caption>All Vehicles</caption>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th> Name </th>
+                    <th> Manufacturer </th>
+                    <th> Reg No </th>
+                    <th> Location </th>
+                    <th> Retail</th>
+                    <th> Type </th>
+                    <th> Condition </th>
+                    <th> Color </th>
+                    <th> Status </th>
+                    <th> Actions </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div id="News" class="tabcontent">
+        <h3>Leased Vehicles</h3>
+        <table id="inventoryTable2" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <caption>Leased Vehicles</caption>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th> Name </th>
+                    <th> Reg No </th>
+                    <th> Location </th>
+                    <th> Type </th>
+                    <th> Condition </th>
+                    <th> Color </th>
+                    <th> Status </th>
+                    <th> Lease Date</th>
+                    <th> Exp Return Date</th>
+                    <th> Actions </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div id="Contact" class="tabcontent">
+        <h3>Sold Vehicles</h3>
+        <table id="inventoryTable3" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <thead>
+                <tr><th>Sold Vehicles</th></tr>
+                <tr>
+                    <th></th>
+                    <th> Name </th>
+                    <th> Reg No </th>
+                    <th> Location </th>
+                    <th> Retail </th>
+                    <th> Car Type </th>
+                    <th> Condition </th>
+                    <th> Color </th>
+                    <th> Status </th>
+                    <th> Date Sold</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div id="About" class="tabcontent">
+        <h3>Available Vehicles</h3>
+        <table id="inventoryTable4" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <thead>
+                <tr><th>Available Vehicles</th></tr>
+                <tr>
+                    <th></th>
+                    <th> Name </th>
+                    <th> Reg No </th>
+                    <th> Location </th>
+                    <th> Retail</th>
+                    <th> Type </th>
+                    <th> Condition </th>
+                    <th> Color </th>
+                    <th> Status </th>
+                    <th> Actions </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div id="Delete" class="tabcontent">
+        <h3>Deleted Vehicles</h3>
+        <table id="inventoryTable5" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <thead>
+                <tr><th>Deleted Vehicles</th></tr>
+                <tr>
+                    <th></th>
+                    <th> Name </th>
+                    <th> Reg No </th>
+                    <th> Deleted By </th>
+                    <th> Date Deleted </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        function openPage(pageName, elmnt, color) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].style.backgroundColor = "";
+            }
+            document.getElementById(pageName).style.display = "block";
+            elmnt.style.backgroundColor = color;
+        }
+
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+
+        var Popup, dataTable1, dataTable2, dataTable3, dataTable4, dataTable5;
+        $(document).ready(function () {
+            dataTable1 = $("#inventoryTable1").DataTable({
+                "orderable": false,
+                "searchable": false,
+                "responsive": true,
+                "dom": 'lBfrtip',
+                "buttons": [
+                    {
+                        extend: 'csv',
+                        messageTop: 'All Vehicles Registered on CMS',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'excel',
+                        messageTop: 'All Vehicles Registered on CMS',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-secondary'
+                    },
+                    {
+                        extend: 'print',
+                        messageTop: 'All Vehicles Registered on CMS',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-primary'
+                    }
+                ],
+                "ajax": {
+                    "url": "/cars/GetDataCars",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    {
+                        "data": "id",
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    { "data": "name" },
+                    { "data": "carManufacturerName" },
+                    { "data": "regNumber" },
+                    { "data": "locationName" },
+                    { "data": "retailPrice" },
+                    { "data": "carTypes" },
+                    { "data": "condition" },
+                    { "data": "color" },
+                    { "data": "status" },
+                    {
+                        render: function (a, t, data, n) {
+                            return `\n <div style="text-align: center">\n
+                                      \n <div class="btn-group">\n
+                                       <button type="button" class="btn btn-danger dropdown-toggle" style="font-size: 13px;" data-toggle="dropdown">View More
+                                       <i class="fa fa-folder"></i>
+                                       </button>
+                                       <ul class="dropdown-menu" style="text-align: center; min-width:100% !important" role="menu">
+                                          <li><a class="edit" href="/Cars/EditVehicle/`+ data.id + `">  Edit   <i class="fa fa-edit"></i></a></li>
+                                          <li><a class="edit" onclick="return remove(`+ data.id + `)"> Delete  <i class="fa fa-trash"></i></a></li>
+                                        </ul>
+                                  \n </div>\n`
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No <b >data</b> found"
+                }
+            });
+            
+            //new $.fn.dataTable.FixedHeader(dataTable);
+        });
+
+        function remove(id) {
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this Vehicle",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete",
+                cancelButtonText: "No, cancel",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            url: "../../cars/RemoveVehicle/" + id + "",
+                            method: "post",
+                            success: function (response) {
+                                if (response)
+                                    swal(response, "Request Made", "success");
+                                setTimeout(function () {
+                                    window.location.replace(window.location.href);
+                                }, 3000);
+                            }
+                        });
+
+                        //window.location.href = window.location.href; //This is a possibility
+                        //window.location.reload(); //Another possiblity
+                        //history.go(0); //And another
+                    } else {
+                        swal("Cancelled", "Vehicle is safe :)", "error");
+                    }
+                });
+        }
+
+        $(document).ready(function () {
+            dataTable2 = $("#inventoryTable2").DataTable({
+                "orderable": false,
+                "searchable": false,
+                "responsive": true,
+                "dom": 'lBfrtip',
+                "buttons": [
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-secondary'
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-primary'
+                    }
+                ],
+                "ajax": {
+                    "url": "/cars/GetDataLeased",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    {
+                        "data": "id",
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    { "data": "name" },
+                    { "data": "regNumber" },
+                    { "data": "locationName" },
+                    { "data": "carTypes" },
+                    { "data": "condition" },
+                    { "data": "color" },
+                    { "data": "status" },
+                    {
+                        "data": "dateLeased",
+                        "render": function (d) {
+                            return moment(d).format('LL');
+                        }
+                    },
+                    {
+                        "data": "expectedReturnDate",
+                        "render": function (d) {
+                            return moment(d).format('LL');
+                        }
+                    },
+                    {
+                        render: function (a, t, data, n) {
+                            return `\n <div style="text-align: center">\n
+                                                   \n <div class="btn-group">\n
+                                                       <button type="button" class="btn btn-danger dropdown-toggle" style="font-size: 13px;" data-toggle="dropdown">More
+                                                        <i class="fa fa-folder"></i>
+                                                        </button>
+                                                         <ul class="dropdown-menu" style="text-align: center; min-width:100% !important" role="menu">
+                                                        <li><a class="edit" href="/Cars/EditVehicle/`+ data.id + `">  Edit   <i class="fa fa-edit"></i></a></li>
+                                                         <li><a class="edit" onclick="return remove(`+ data.id + `)"> Delete  <i class="fa fa-trash"></i></a></li>
+                                                        </ul>
+                                                  \n </div>\n`
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No <b >data</b> found"
+                }
+            });
+            //new $.fn.dataTable.FixedHeader(dataTable);
+        });
+
+        $(document).ready(function () {
+            dataTable3 = $("#inventoryTable3").DataTable({
+                "orderable": false,
+                "searchable": false,
+                "responsive": true,
+                "dom": 'lBfrtip',
+                "buttons": [
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-secondary'
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-primary'
+                    }
+                ],
+                "ajax": {
+                    "url": "/cars/GetDataSold",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    {
+                        "data": "id",
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    { "data": "name" },
+                    { "data": "regNumber" },
+                    { "data": "locationName" },
+                    { "data": "retailPrice" },
+                    { "data": "carTypes" },
+                    { "data": "condition" },
+                    { "data": "color" },
+                    { "data": "status" },
+                    { "data": "dateSold" }
+                ],
+                "language": {
+                    "emptyTable": "No <b >data</b> found"
+                }
+            });
+            //new $.fn.dataTable.FixedHeader(dataTable);
+        });
+        $(document).ready(function () {
+            dataTable4 = $("#inventoryTable4").DataTable({
+                "orderable": false,
+                "searchable": false,
+                "responsive": true,
+                "dom": 'lBfrtip',
+                "buttons": [
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-secondary'
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-primary'
+                    }
+                ],
+                "ajax": {
+                    "url": "/cars/GetDataAvailable",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    {
+                        "data": "id",
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    { "data": "name" },
+                    { "data": "regNumber" },
+                    { "data": "locationName" },
+                    { "data": "retailPrice" },
+                    { "data": "carTypes" },
+                    { "data": "condition" },
+                    { "data": "color" },
+                    { "data": "status" },
+                    {
+                        render: function (a, t, data, n) {
+                            return `\n <div style="text-align: center">\n
+                                                   \n <div class="btn-group">\n
+                                                       <button type="button" class="btn btn-danger dropdown-toggle" style="font-size: 13px;" data-toggle="dropdown">More
+                                                        <i class="fa fa-folder"></i>
+                                                        </button>
+                                                         <ul class="dropdown-menu" style="text-align: center; min-width:100% !important" role="menu">
+                                                        <li><a class="edit" href="/Cars/EditVehicle/`+ data.id + `">  Edit   <i class="fa fa-edit"></i></a></li>
+                                                         <li><a class="edit" onclick="return remove(`+ data.id + `)"> Delete  <i class="fa fa-trash"></i></a></li>
+                                                        </ul>
+                                                  \n </div>\n`
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No <b >data</b> found"
+                }
+            });
+            //new $.fn.dataTable.FixedHeader(dataTable);
+        });
+    </script>
+}
+
+@*onclick="Add('@Model.Id')"*@
+@*var Add = function (Id) {
+        $("#viewtrips").modal('show');
+         $("#viewtrips").modal();
+    }*@
+@*<div class="modal fade" id="viewtrips" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Branch Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="m-portlet__body">
+                        <div class="m-form__section m-form__section--first">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="form-label">Library Branch Name: </label>
+                                    <input type="hidden" id="LibraryBranchId" value="@Model.Id" />
+                                    <input type="text" readonly class="form-control" id="LibraryBranchName" value="@Model.BranchName" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label>Select Asset: </label>
+                                    <div class="form-group">
+                                        <select id="AssetId" style="width:100%; display:block !important" class="form-control m-input dropdown-select2" asp-items="ViewBag.Asset as IEnumerable<SelectListItem>">
+                                            <option value="" style="width:100%;display:block !important" id="VehId">
+                                                Select an Asset
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="form-label"> Library Branch Id: </label>
+                                    <input type="number" class="form-control" placeholder="Number Of Copies" id="copies" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="assign()" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>*@

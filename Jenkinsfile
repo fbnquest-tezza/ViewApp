@@ -26,18 +26,24 @@ pipeline {
     					steps {
 						
 							bat """
-        dotnet restore 
-        dotnet build -c Release /p:Version=${BUILD_NUMBER}
-dotnet build /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish
-/p:WebPublishMethod=FileSystem 
-/p:SkipInvalidConfigurations=true 
-/t:build 
-/p:Configuration=Release 
-/p:Platform=\"Any CPU\"
-/p:DeleteExistingFiles=True
-/p:publishUrl=c:\\inetpub\\wwwroot"
-        dotnet publish -c Release --no-build
-        """
+							dotnet restore 
+							dotnet build -c Release /p:Version=${BUILD_NUMBER}
+							dotnet build 
+							/p:DeployOnBuild=true 
+							/p:DeployDefaultTarget=WebPublish 
+							/p:WebPublishMethod=MSDeploy
+							/p:MSDeployPublishMethod=InProc 
+							/p:MSDeployServiceURL=localhost 
+							/p:DeployIisAppPath=“Default Web Site/CMS”
+							/p:SkipInvalidConfigurations=true 
+							/t:build 
+							/p:precompilebeforepublish=true
+							/t:publish 
+							/p:Configuration=Release 
+							/p:Platform=“Any CPU”
+							/p:DeleteExistingFiles=True 
+							/p:publishUrl=c:\\inetpub\\wwwroot\\CMS
+									"""
 		}
 				}
 				

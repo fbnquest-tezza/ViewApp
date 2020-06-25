@@ -1,0 +1,240 @@
+﻿@model LocationDTO
+@{
+    ViewData["Title"] = "Get All Locations";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    var error = TempData["error"] as string;
+    var success = TempData["success"] as string;
+}
+<br />
+
+@if (!string.IsNullOrEmpty(error))
+{
+    <div class="alert alert-danger" style="padding: 10px">
+        @error
+    </div>
+}
+@if (!string.IsNullOrEmpty(success))
+{
+    <div class="alert alert-success" style="padding: 10px">
+        @success
+    </div>
+}
+<div class="container-fluid" style="border-radius:4px; background-color:gainsboro; text-align:right!important">
+    <br />
+    <h3 class="text-muted"><b>All Locations configured on this platform</b></h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+<br />
+<br />
+<button class="btn btn-success" onclick="return add()" style="float:right;"><i class="fa fa-plus-circle"></i> Add New Location</button>
+
+
+<div id="" class="tabcontent">
+    <table id="Table1" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th> Name </th>
+                <th> Address </th>
+                <th> State </th>
+                <th> Created At</th>
+                <th> Actions </th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="modal fade" id="viewtrips" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <form asp-action="AddLocationPost" method="post">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"> <i class="fa fa-plus-circle"></i> Add New Location </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="m-portlet__body">
+                        <div class="m-form__section m-form__section--first">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="form-label"> Location Name: </label>
+                                    <input placeholder="Enter Location Name" asp-for="LocationName" name="LocationName" id="LocationName" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="form-label"> Location Address: </label>
+                                    <textarea cols="20" rows="4" style="min-height:100px !important;" placeholder="Enter Location Address" asp-for="LocationAddress" name="LocationAddress" id="LocationAddress" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label>Select a State: </label>
+                                    <div class="m-input-icon m-input-icon--right">
+                                        <select id="StateId" asp-for="StateId" asp-items="ViewBag.State as IEnumerable<SelectListItem>" class="form-control dropdown-select2">
+                                            <option value="" id="TerId">Select a State</option>
+                                        </select>
+                                        <div class="form-control-feedback"><span asp-validation-for="StateId"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Styles
+{
+    <style>
+        .datepicker {
+            width: 16em !important;
+        }
+
+        .divrow {
+            border-radius: 4px;
+        }
+
+        .edit {
+            color: lightblue
+        }
+    </style>
+}
+
+@section Scripts{
+    <script>
+
+        $(document).ready(function () {
+            $(".dropdown-select2").select2();
+        });
+
+        function add() {
+            $("#viewtrips").modal('show');
+            $("#viewtrips").modal();
+        }
+          var dataTable2; var dataTable1;
+        $(document).ready(function () {
+            dataTable2 = $("#Table1").DataTable({
+                "destroy": true,
+                "orderable": false,
+                "searchable": false,
+                "responsive": true,
+                "dom": 'lBfrtip',
+                "buttons": [
+                    {
+                        extend: 'csv',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'excel',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-secondary'
+                    },
+                    {
+                        extend: 'print',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-primary'
+                    }
+                ],
+                "ajax": {
+                    "url": "@Url.Action("GetAll", "Location")",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    {
+                        "data": "locationId",
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    { "data": "locationName" },
+                    { "data": "locationAddress" },
+                    { "data": "stateName" },
+
+                    {
+                        "data": "creationTime",
+                        "render": function (d) {
+                            return moment(d).format('LLLL');
+                        }
+                    },
+                    {
+                        render: function (a, t, data, n) {
+                            return `\n <div style="text-align: center">\n
+                                                                \n <div class="btn-group">\n
+                                                                    <button type="button" class="btn btn-primary dropdown-toggle" style="font-size: 13px;" data-toggle="dropdown">View More
+                                                                    <i class="fa fa-folder"></i>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu" style="text-align: center; min-width:100% !important" role="menu">
+                                                                    <li><a  href="/Location/Update/`+ data.locationId + `">  Edit   <i class="fa fa-edit"></i></a></li>
+                                                                    <li><a class="navbar-light"  onclick="return remove(`+ data.locationId + `)"> Delete  <i class="fa fa-trash"></i></a></li>
+                                                                       </ul>
+                                                               \n </div>\n`
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No <b >data</b> found"
+                }
+            });
+            dataTable2.on('click', '.open-details-modal', function () {
+                var tr = $(this).closest("tr");
+                var data = dataTable2.row(tr).data();
+
+                var tmpl = $.templates("#details-modal-template");
+                var html = tmpl.render(data);
+                $("#details-modal-body").html(html);
+                $('#details-modal').modal('show')
+            })
+        });
+
+        function remove(locationId) {
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this Location",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete",
+                cancelButtonText: "No, cancel",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            url: "../../Location/RemoveLocation/" + locationId + "",
+                            method: "post",
+                            success: function (response) {
+                                if (response)
+                                    swal(response, "Request Made", "success");
+                                setTimeout(function () {
+                                    window.location.replace(window.location.href);
+                                }, 3000);
+                            }
+                        });
+                    } else {
+                        swal("Cancelled", "Location is safe :)", "error");
+                    }
+                });
+        }
+
+    </script>
+}

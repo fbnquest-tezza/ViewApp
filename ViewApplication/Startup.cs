@@ -84,7 +84,13 @@ namespace ViewApplication
                 return output;
             }, false);
 
-            services.AddSession();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            services.AddSession(o =>
+            {
+                o.Cookie.HttpOnly = true;
+            });
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAuthentication(x => {
                 x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -129,7 +135,7 @@ namespace ViewApplication
                                        {
                                         new Claim("access_token", token.Token),
                                         new Claim("refresh_token", token.Token)
-                                    });
+                                       });
 
                                        x.ShouldRenew = true;
                                    }
@@ -150,7 +156,15 @@ namespace ViewApplication
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseStatusCodePages(async context =>
+            {
+                var request = context.HttpContext.Request;
+                var response = context.HttpContext.Response;
+                if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+                {
+                    response.Redirect("/account/login");
+                }
+            });
             app.UseStatusCodePagesWithReExecute("/error/{0}");
 
             app.UseStaticFiles();

@@ -308,6 +308,37 @@ namespace ViewApplication.Controllers
                 vat = CurrencyConverter.formatAmount(vat)
             };
         }
+
+        [HttpGet]
+        [Route("GetLeaseRate")]
+        public async Task<GetTotalResponseDTO> GetTotalLease(int carId, int duration, DurationType durationtype, DeliveryType deliveryType)
+        {
+            var client = _httpClientFactory.CreateClient(Constants.ClientWithToken);
+
+            decimal deliveryFee = 0m;
+
+            if (deliveryType == DeliveryType.HomeDelivery)
+                deliveryFee = 50000;
+
+            var response = await client.GetAsync<RateDTO>(string.Format(Constants.Routes.GetLeaseRate, carId, duration, durationtype));
+
+            var obj = response.Object;
+
+            var response2 = await client.GetAsync<decimal>(string.Format(Constants.Routes.CalculateVAT, obj.Amount));
+
+            var vat = response2.Object;
+
+            decimal? Total = deliveryFee + obj.Amount + vat;
+
+            return new GetTotalResponseDTO
+            {
+                deliveryCharge = CurrencyConverter.formatAmount(deliveryFee),
+                amount = CurrencyConverter.formatAmount(obj.Amount),
+                total = CurrencyConverter.formatAmount(Total),
+                vat = CurrencyConverter.formatAmount(vat)
+            };
+        }
+
         [Route("SellVehicle")]
         public async Task<IActionResult> SellVehicle()
         {
@@ -378,6 +409,27 @@ namespace ViewApplication.Controllers
                 ViewBag.Cars = new SelectList(result ?? new List<CarsDTO>(), "Id", "Details");
             }
             return View();
+        }
+        [HttpPost]
+        [Route("LeasePost")]
+        public async Task<IActionResult> LeasePost(PostLeaseDTO model)
+        {
+            var client = _httpClientFactory.CreateClient(Constants.ClientWithToken);
+
+            var response = await client.PostAsJsonAsync<PostLeaseDTO, PostLeaseDTO>($"{Constants.Routes.Car}/VehicleLease", model);
+
+            var items = response.Object;
+            var code = response.Code;
+            if (response.ValidationErrors.Count > 0 || code != HttpStatusCode.OK.ToString())
+            {
+                TempData["error"] = "An Error Occurred " + response.Code + ": " + response.ShortDescription;
+                return View("Lease", model);
+            }
+            else
+            {
+                TempData["success"] = "Lease Successful for " + model.CustomerLastName + " " + model.CustomerFirstName ;
+                return RedirectToAction("Lease");
+            }
         }
     }
 }

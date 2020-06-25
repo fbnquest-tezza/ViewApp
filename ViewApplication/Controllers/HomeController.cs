@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using ViewApplication.Models;
 using Newtonsoft.Json;
 using ViewApplication.Utils;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ViewApplication.Controllers
 {

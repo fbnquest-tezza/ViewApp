@@ -6,7 +6,7 @@
 }
 
     <div class="">
-        <form asp-action="AddCarPost">
+        <form asp-action="AddCarPost" data-parsley-validate="">
             <div class="divrow" style="text-align:center">
                 <br /><h1 class="text-muted"><b>Add New Vehicle</b></h1><br />
             </div><hr /><br />
@@ -24,7 +24,7 @@
                 <div class="col-lg-3">
                     <label>Name of Vehicle:</label>
                     <div class="m-input-icon m-input-icon--right">
-                        <input type="text" id="name" name="name" class="form-control" asp-for="name" placeholder="Enter Name Of Vehicle" />
+                        <input type="text" id="name" name="name" data-parsley-trigger="change" required="" class="form-control" asp-for="name" placeholder="Enter Name Of Vehicle" />
                     </div>
                 </div>
                 <div class="col-lg-3">
@@ -53,8 +53,8 @@
                 <div class="col-lg-3">
                     <label>Vehicle Status :</label>
                     <div class="m-input-icon m-input-icon--right">
-                        <select asp-for="CarType" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarType>())">
-                            <option value="" id="Type">Select Car Type</option>
+                        <select asp-for="CarType" id="Type" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarType>())">
+                            <option value="" >Select Car Type</option>
                         </select>
                         <div class="form-control-feedback"><span asp-validation-for="CarType"></span></div>
                     </div>
@@ -62,8 +62,8 @@
                 <div class="col-lg-3">
                     <label>Manufacturer: </label>
                     <div class="m-input-icon m-input-icon--right">
-                        <select id="CarManufacturerId" asp-for="CarManufacturerId" asp-items="ViewBag.CarManufacturer as IEnumerable<SelectListItem>" class="form-control dropdown-select2">
-                            <option value="" id="carmanId">Select a Vehicle Manufacturer</option>
+                        <select id="carmanId" asp-for="CarManufacturerId" asp-items="ViewBag.CarManufacturer as IEnumerable<SelectListItem>" class="form-control dropdown-select2">
+                            <option value="" id="">Select a Vehicle Manufacturer</option>
                         </select>
                         <div class="form-control-feedback"><span asp-validation-for="CarManufacturerId"></span></div>
                     </div>
@@ -71,8 +71,8 @@
                 <div class="col-lg-3">
                     <label>Vehice Condition:</label>
                     <div class="m-input-icon m-input-icon--right">
-                        <select asp-for="Conditions" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarCondition>())">
-                            <option value="" id="Condition">Select Vehicle Condition</option>
+                        <select asp-for="Conditions" id="Condition" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarCondition>())">
+                            <option value="" >Select Vehicle Condition</option>
                         </select>
                         <div class="form-control-feedback"><span asp-validation-for="Conditions"></span></div>
                     </div>
@@ -80,8 +80,8 @@
                 <div class="col-lg-3">
                     <label>Vehicle Color:</label>
                     <div class="m-input-icon m-input-icon--right">
-                        <select asp-for="Colors" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarColor>())">
-                            <option value="" id="Color">Select Vehicle Color</option>
+                        <select asp-for="Colors" id="Color" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarColor>())">
+                            <option value="" >Select Vehicle Color</option>
                         </select>
                         <div class="form-control-feedback"><span asp-validation-for="Colors"></span></div>
                     </div>
@@ -98,8 +98,8 @@
                 <div class="col-lg-3">
                     <label>Vehicle Status :</label>
                     <div class="m-input-icon m-input-icon--right">
-                        <select asp-for="Statuses" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarStatus>())">
-                            <option value="" id="Status">Select Vehicle Status</option>
+                        <select asp-for="Statuses"  id="Status" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarStatus>())">
+                            <option value="">Select Vehicle Status</option>
                         </select>
                         <div class="form-control-feedback"><span asp-validation-for="Statuses"></span></div>
                     </div>
@@ -154,7 +154,7 @@
                     </div>
                 </div>
             </div>
-            <br />
+            <br /><br /><br /><br />
             <div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit">
                 <div class="m-form__actions m-form__actions--solid">
                     <div class="row">
@@ -183,7 +183,9 @@
 {
     <script type="text/javascript">
 
-        $(".datepicker").datepicker();
+        $(".datepicker").datepicker({
+            format: "dd/mm/yyyy"
+        });
 
         $(document).ready(function () {
             $(".dropdown-select2").select2();
@@ -196,12 +198,12 @@
             var EngineNumber = $("#EngineNumber").val();
             var RetailPrice = $("#RetailPrice").val();
             var carmanId = $("#carmanId").val();
-            var Condition = $("#Condition").val();
+            var Condition = $("#Condition").select2('val');
             var Color = $("#Color").val();
             var Status = $("#Status").val();
             var Type = $("#Type").val();
             if (name == "") {
-                swal("", "Name is required", "error")
+                swal("", "Vehicle Name is required", "error")
                 return false;
             }
             else if (regNumber == "")
@@ -214,11 +216,32 @@
                 return false;
             }
             else if (locationId == "") {
-                swal("", "Location is required", "error")
+                swal("", "Vehicle Location is required", "error")
+                return false;
+            }
+            else if (RetailPrice == "") {
+                swal("", "Retail Price is required", "error")
+                return false;
+            }
+            else if (Condition == "") {
+                swal("", "Vehicle Condition is required", "error")
+                return false;
+            }
+            else if (Color == "") {
+                swal("", "Vehicle Color is required", "error")
+                return false;
+            }
+            else if (Status == "") {
+                swal("", "Vehicle Status is required", "error")
+                return false;
+            }
+            else if (Type == "") {
+                swal("", "Vehicle Type is required", "error")
                 return false;
             }
             else {
-                swal("","Good job", "success")
+                swal("", "Good job", "success")
+                $.blockUI({ message: '<h1>Processing...</h1>' });               
                 return true;
             }
         };

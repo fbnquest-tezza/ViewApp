@@ -1,0 +1,226 @@
+﻿@model RateDTO
+@{
+    ViewData["Title"] = "Get All Rates";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    var error = TempData["error"] as string;
+}
+<br />
+<div class="card card-header" style="text-align:center !important">
+    <h4 style="text-align:right !important" class="text-muted"><b>All Rates configured on this platform </b></h4>
+</div>
+<br />
+<br />
+
+<div id="" class="tabcontent">
+    <table id="Table1" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th> Vehicle </th>
+                <th> RegNum</th>
+                <th> Location</th>
+                <th> Hourly </th>
+                <th> Daily</th>
+                <th> Weekly</th>
+                <th> Monthly</th>
+                <th> Yearly</th>
+                <th> Retail</th>
+                <th> Actions </th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+<div class="modal fade" id="viewdetails" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="text-align:center">
+                <h5 class="modal-title" id="exampleModalLabel">Details </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="m-portlet__body">
+                    <div class="m-form__section m-form__section--first">
+                        <input type="hidden" value="carId" id="carId" />
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="form-label"> Car Name: </label>
+                                <input type="text" id="carName" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="form-label"> Retail Price: </label>
+                                <input type="text" id="rtp" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="form-label"> Per Hour: </label>
+                                <input type="text" id="phr" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="form-label"> Per Day: </label>
+                                <input type="text" id="pdy" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="form-label"> Per Week: </label>
+                                <input type="text" id="pwk" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="form-label"> Per Month: </label>
+                                <input type="text" id="pmn" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="form-label"> Per Year: </label>
+                                <input type="text" id="pyr" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="replySend()" class="btn btn-success">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles
+{
+    <style>
+        .datepicker {
+            width: 16em !important;
+        }
+
+        .divrow {
+            border-radius: 4px;
+        }
+    </style>
+}
+
+@section Scripts{
+    <script>
+
+          var dataTable2; var dataTable1;
+        $(document).ready(function () {
+            dataTable2 = $("#Table1").DataTable({
+                "destroy": true,
+                "orderable": false,
+                "searchable": false,
+                "responsive": true,
+                "dom": 'lBfrtip',
+                "buttons": [
+                    {
+                        extend: 'csv',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'excel',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-secondary'
+                    },
+                    {
+                        extend: 'print',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-primary'
+                    }
+                ],
+                "ajax": {
+                    "url": "@Url.Action("GetAllRates", "Rates")",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    {
+                        "data": "id",
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    { "data": "carName" },
+                    { "data": "regNumber" },
+                    { "data": "location"},
+                    { "data": "leasePerHour" },
+                    { "data": "leasePerDay" },
+                    { "data": "leasePerWeek" },
+                    { "data": "leasePerMonth" },
+                    { "data": "leasePerYear" },
+                    { "data": "retailPrice" },
+                    {
+                        render: function (a, t, data, n) {
+                            return `\n <div style="text-align: center">\n
+                                                                \n <div class="btn-group">\n
+                                                                    <button type="button" class="btn btn-primary dropdown-toggle" style="font-size: 13px;" data-toggle="dropdown">View More
+                                                                    <i class="fa fa-folder"></i>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu" style="text-align: center; min-width:100% !important" role="menu">
+                                                                     <li><a onclick="return viewDetails(`+ data.carId + `)"> View Details <i class="fa fa-leaf"></i></a></li>
+                                                                     <li><a onclick="return edit(`+ data.id + `)">Edit <i class="fa fa-edit"></i></a></li>
+                                                                       </ul>
+                                                               \n </div>\n`
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No <b >data</b> found"
+                }
+            });
+            dataTable2.on('click', '.open-details-modal', function () {
+                var tr = $(this).closest("tr");
+                var data = dataTable2.row(tr).data();
+
+                var tmpl = $.templates("#details-modal-template");
+                var html = tmpl.render(data);
+                $("#details-modal-body").html(html);
+                $('#details-modal').modal('show')
+            })
+        });
+
+        function viewDetails(carId) {
+            $.blockUI({ message: '<h1>Processing...</h1>' });
+            $.ajax({
+                url: "../../Rates/GetRatesbycarId/" + carId + "",
+                method: "GET",
+                success: function (data) {
+                    if (data) {
+                        $.unblockUI();
+                        $("#viewdetails").modal('show');
+                        $("#viewdetails").modal();
+                        $("#carId").val(carId);
+                        $('#carName').val(data.carName);
+                        $('#rtp').val(data.retailPrice);
+                        $('#phr').val(data.leasePerHour);
+                        $('#pdy').val(data.leasePerDay);
+                        $('#pwk').val(data.leasePerWeek);
+                        $('#pmn').val(data.leasePerMonth);
+                        $('#pyr').val(data.leasePerYear);
+                    }
+                }
+            })
+        }
+
+    </script>
+}

@@ -25,12 +25,12 @@ pipeline {
 				stage('Build') {
     					steps {
 						
-						// bat """
-        
-        //dotnet build -c Release /p:Version=${BUILD_NUMBER}
-        //dotnet publish -c Release --no-build
-        //"""
-    					    bat "\"${tool 'MSBuild'}\" ViewApplication.sln /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:SkipInvalidConfigurations=true /t:build /p:Configuration=Release /p:Platform=\"Any CPU\" /p:DeleteExistingFiles=True /p:publishUrl=c:\\inetpub\\wwwroot"
+						 bat """
+        dotnet restore
+        dotnet build -c Release /p:Version=${BUILD_NUMBER}
+        dotnet publish -c Release --no-build
+        """
+    	//				    bat "\"${tool 'MSBuild'}\" ViewApplication.sln /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:SkipInvalidConfigurations=true /t:build /p:Configuration=Release /p:Platform=\"Any CPU\" /p:DeleteExistingFiles=True /p:publishUrl=c:\\inetpub\\wwwroot"
     					}
 				}
 				

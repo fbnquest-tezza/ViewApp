@@ -1,7 +1,7 @@
 //def ReleaseDir = "c:\inetpub\wwwroot"
+def projectName = "ViewApp"
 pipeline {
 			agent any
-			String projectName = "ViewApp"
 			stages {
 				stage('Source'){
 					steps{

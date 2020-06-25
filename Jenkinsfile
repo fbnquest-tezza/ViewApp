@@ -25,30 +25,22 @@ pipeline {
 				stage('Build restore') {
     					steps {
 						
-							 bat """
-								dotnet restore
-								dotnet build -c Release /p:Version=${BUILD_NUMBER}
-								dotnet publish -c Release --no-build
-							"""
+							bat """
+        dotnet restore 
+        dotnet build -c Release /p:Version=${BUILD_NUMBER}
+dotnet build /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish
+/p:WebPublishMethod=FileSystem 
+/p:SkipInvalidConfigurations=true 
+/t:build 
+/p:Configuration=Release 
+/p:Platform=\"Any CPU\"
+/p:DeleteExistingFiles=True
+/p:publishUrl=c:\\inetpub\\wwwroot"
+        dotnet publish -c Release --no-build
+        """
 		}
 				}
-				stage('Build publish') {
-    					steps {
-						
-						 bat """
-							dotnet build 
-							/p:DeployOnBuild=true 
-							/p:DeployDefaultTarget=WebPublish
-							/p:WebPublishMethod=FileSystem 
-							/p:SkipInvalidConfigurations=true 
-							/t:build 
-							/p:Configuration=Release 
-							/p:Platform=\"Any CPU\"
-							/p:DeleteExistingFiles=True
-							/p:publishUrl=c:\\inetpub\\wwwroot"
-							"""
-							}
-				}
+				
 				//stage('Build last') {
     				//	steps {
 						

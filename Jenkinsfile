@@ -26,7 +26,7 @@ pipeline {
     					steps {
 						
 						 bat """
-        cd ${projectName}
+        //cd ${projectName}
         dotnet build -c Release /p:Version=${BUILD_NUMBER}
         dotnet publish -c Release --no-build
         """

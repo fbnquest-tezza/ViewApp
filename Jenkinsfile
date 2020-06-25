@@ -8,7 +8,9 @@ pipeline {
 					}
 				}
 				stage('Nuget Package Restore'){
-					bat label: '', script: 'nuget restore'
+					steps{
+					bat label: '', script: 'nuget restore .'
+					}
 				}
 				stage('Build') {
     					steps {

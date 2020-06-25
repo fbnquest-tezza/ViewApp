@@ -21,7 +21,6 @@
             </div>
         }
         <input type="hidden" asp-for="Id" name="Id" id="Id" />
-        @*<input type="hidden" asp-for="ProductionYear" name="ProductionYear" id="ProductionYear" />*@
         <div class="form-group m-form__group row divrow">
             <div class="col-lg-4">
                 <label>Name of Vehicle:</label>
@@ -61,8 +60,8 @@
             <div class="col-lg-4">
                 <label>Manufacturer: </label>
                 <div class="m-input-icon m-input-icon--right">
-                    <select id="CarManufacturerId" asp-for="CarManufacturerId" asp-items="ViewBag.CarManufacturer as IEnumerable<SelectListItem>" class="form-control dropdown-select2">
-                        <option value="" id="carmanId">Select a Vehicle Manufacturer</option>
+                    <select id="carmanId" asp-for="CarManufacturerId" asp-items="ViewBag.CarManufacturer as IEnumerable<SelectListItem>" class="form-control dropdown-select2">
+                        <option value="">Select a Vehicle Manufacturer</option>
                     </select>
                     <div class="form-control-feedback"><span asp-validation-for="CarManufacturerId"></span></div>
                 </div>
@@ -73,8 +72,8 @@
             <div class="col-lg-4">
                 <label>Vehice Condition:</label>
                 <div class="m-input-icon m-input-icon--right">
-                    <select asp-for="Conditions" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarCondition>())">
-                        <option value="" id="Condition">Select Vehicle Condition</option>
+                    <select asp-for="Conditions" id="Condition" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarCondition>())">
+                        <option value="" >Select Vehicle Condition</option>
                     </select>
                     <div class="form-control-feedback"><span asp-validation-for="Conditions"></span></div>
                 </div>
@@ -82,8 +81,8 @@
             <div class="col-lg-4">
                 <label>Vehicle Color:</label>
                 <div class="m-input-icon m-input-icon--right">
-                    <select asp-for="Colors" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarColor>())">
-                        <option value="" id="Color">Select Vehicle Color</option>
+                    <select asp-for="Colors" id="Color" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarColor>())">
+                        <option value="" >Select Vehicle Color</option>
                     </select>
                     <div class="form-control-feedback"><span asp-validation-for="Colors"></span></div>
                 </div>
@@ -91,8 +90,8 @@
             <div class="col-lg-4">
                 <label>Vehicle Status :</label>
                 <div class="m-input-icon m-input-icon--right">
-                    <select asp-for="Statuses" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarStatus>())">
-                        <option value="" id="Status">Select Vehicle Status</option>
+                    <select id="Status" asp-for="Statuses" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarStatus>())">
+                        <option value="">Select Vehicle Status</option>
                     </select>
                     <div class="form-control-feedback"><span asp-validation-for="Statuses"></span></div>
                 </div>
@@ -102,8 +101,8 @@
             <div class="col-lg-4">
                 <label>Vehicle Status :</label>
                 <div class="m-input-icon m-input-icon--right">
-                    <select asp-for="CarType" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarType>())">
-                        <option value="" id="Type">Select Car Type</option>
+                    <select id="Type" asp-for="CarType" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<CarType>())">
+                        <option value="" >Select Car Type</option>
                     </select>
                     <div class="form-control-feedback"><span asp-validation-for="CarType"></span></div>
                 </div>
@@ -144,7 +143,9 @@
 {
     <script type="text/javascript">
 
-        $(".datepicker").datepicker();
+        $(".datepicker").datepicker({
+            format: "dd/mm/yyyy"
+        });
 
         $(document).ready(function () {
             $(".dropdown-select2").select2();
@@ -173,7 +174,19 @@
                 return false;
             }
             else if (locationId == "") {
-                swal("", "Location is required", "error")
+                swal("", "Vehicle Location is required", "error")
+                return false;
+            }
+            else if (Color == "") {
+                swal("", "Vehicle Color is required", "error")
+                return false;
+            }
+            else if (Status == "") {
+                swal("", "Vehicle Status is required", "error")
+                return false;
+            }
+            else if (Type == "") {
+                swal("", "Vehicle Type is required", "error")
                 return false;
             }
             else {

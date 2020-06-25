@@ -48,14 +48,32 @@ namespace ViewApplication.Utils
             public const string GetDeleted = "/api/cars/Deleted";
             public const string CarSearch = "/api/cars/CarSearch";
             public const string Sale = "/api/cars/Sale";
-            public const string Lease = "/api/cars/Lease";
+            public const string Lease = "/api/cars/VehicleLease";
             public const string GetSalesHistory = "/api/cars/GetSalesHistory";
             public const string GetLeaseHistory = "/api/cars/GetLeaseHistory";
+
+            //feedback
+            public const string Feedbacks = "/api/Feedback/GetAllFeedBack";
+            public const string GetFeedbackbyId = "/api/Feedback/GetFeedbackbyid/{0}";
+            public const string ReplyFeedback = "/api/Feedback/ReplyFeedback";
+            public const string SearchFeedback = "/api/Feedback/SearchFeedback";
 
             //Location
 
             public const string GetAllLocations = "/api/Location/GetAll";
             public const string GetAllLocations2 = "/api/Location/GetAll2";
+            public const string Location = "/api/Location/";
+            public const string AddLocation = "/api/Location/AddLocation";
+            public const string UpdateLocation = "/api/Location/UpdateLocation/{0}";
+            public const string GetLocationById = "/api/Location/GetLocationById/{0}";
+
+            //state
+            public const string GetAllStates = "/api/State/GetAllState";
+            public const string AddState = "/api/State/AddState";
+            //Rates
+            public const string GetLeaseRate = "/api/Rates/GetLeaseRate/{0}/{1}/{2}";
+            public const string GetAllRates = "/api/Rates/GetAllRates";
+            public const string GetRateByCarId = "/api/Rates/GetCarRateForLease/{0}";
 
             //Car Manufacturer 
 

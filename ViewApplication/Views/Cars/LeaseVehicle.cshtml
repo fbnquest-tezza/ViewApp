@@ -1,4 +1,4 @@
-﻿@model CarLeaseDTO
+﻿@model PostLeaseDTO
 @{
     ViewData["Title"] = "Lease Vehicle";
     Layout = "~/Views/Shared/_Layout1.cshtml";
@@ -71,15 +71,15 @@
             <div class="col-lg-3">
                 <label>Customer Phone:</label>
                 <div class="m-input-icon m-input-icon--right">
-                    <input type="text" id="CustomerPhone" name="CustomerPhone" class="form-control" asp-for="CustomerPhone" placeholder="Customer Phone" required autocomplete="off" />
+                    <input type="text" id="CustomerPhone" name="CustomerPhone" class="form-control" asp-for="CustomerPhone" placeholder="Customer Phone" required />
                 </div>
             </div>
             <div class="col-lg-3">
-                <label>Customer Home Address:</label>
+                <label>Date Of Birth:</label>
                 <div class="m-input-icon m-input-icon--right">
-                    <input type="text" id="CustomerAddress" name="CustomerAddress" class="form-control" asp-for="CustomerAddress" placeholder="Customer Home Address" required autocomplete="off" />
+                    <input type="text" id="DateOfBirth" name="DateOfBirth" class="form-control datepicker" asp-for="DateOfBirth" placeholder="Customer Date Of Birth" />
                 </div>
-            </div>
+            </div>          
             <div class="col-lg-3">
                 <label>Next Of Kin Name:</label>
                 <div class="m-input-icon m-input-icon--right">
@@ -95,16 +95,16 @@
         </div>
         <div class="form-group m-form__group row divrow">
             <div class="col-lg-3">
-                <label>Date Of Birth:</label>
+                <label>Customer Home Address:</label>
                 <div class="m-input-icon m-input-icon--right">
-                    <input type="text" id="DateOfBirth" name="DateOfBirth" class="form-control datepicker" asp-for="DateOfBirth" placeholder="Customer Date Of Birth" />
+                    <textarea rows="4" cols="20" id="CustomerAddress" name="CustomerAddress" class="form-control" asp-for="CustomerAddress" placeholder="Customer Home Address" required style="min-height:100px !important" autocomplete="off"></textarea>
                 </div>
             </div>
             <div class="col-lg-3">
                 <label>Remark:</label>
                 <div class="m-input-icon m-input-icon--right">
-                    <textarea type="text" id="Remark" name="Remark" class="form-control"
-                              asp-for="Remark" placeholder="Remark"></textarea>
+                    <textarea rows="4" cols="20" id="Remark" name="Remark" class="form-control"
+                              asp-for="Remark" placeholder="Remark" style="min-height:100px !important"></textarea>                 
                 </div>
             </div>
             <div class="col-lg-2">
@@ -243,16 +243,71 @@
 {
     <script type="text/javascript">
 
-        $(".datepicker").datepicker();
-
+        $(".datepicker").datepicker({
+            format: "dd/mm/yyyy"
+        });
         try
         {
             $(document).ready(function () {
                 $(".dropdown-select2").select2();
             });
+            $('#GetTotal').on("click", function () {
+                var carid = $("#CarId").val();
+                var durationtype = $("#DurationType").val();
+                var duration = $("#Duration").val();
+                var delivery = $("#DeliveryType").find(":selected").val();
+                if (delivery == "") {
+                    swal("", "Select Delivery Type", "");
+                    return false;
+                }
+                if (carid == "") {
+                    swal("", "Select Vehicle", "");
+                    return false;
+                }
+                if (durationtype == "") {
+                    swal("", "Select Duration Type", "");
+                    return false;
+                }
+                if (duration == "") {
+                    swal("", "Select Duration", "");
+                    return false;
+                }
+                var deliveryType = $("#DeliveryType").find(":selected").val();
+                $.blockUI({ message: '<h1>Processing...</h1>' });
+                $.ajax({
+                    url: "../../cars/GetLeaseRate",
+                    data: {
+                        carid: carid,
+                        duration: duration,
+                        durationtype: durationtype,
+                        deliveryType: deliveryType
+                    },
+                    method: "GET",
+                    success: function (data) {
+                        if (data) {
+                            $.unblockUI();
+                            $('#bkAmount').text(data.amount);
+                            $('#bkAmount').val(data.amount);
+                            $('#bkVat').text(data.vat);
+                            $('#bkDelivery').text(data.deliveryCharge);
+                            $('#bkTotal').text(data.total);
+
+                            @*@amount = data.amount;
+                            @vat = data.vat;
+                            @delivery = data.delivery;
+                            @total = data.totalToPay;*@
+                        }
+                        else {
+                            $.unblockUI();
+                            swal("", "An Error Occurred", "");
+                        }
+                    }
+                });
+            })
         }
         catch (err) {
-
+            $.unblockUI();
+            swal("", "An Error Occurred", "");
         }
     </script>
 }

@@ -61,5 +61,34 @@ namespace ViewApplication.Models
         public string OptionalPhoneNumber { get; set; }
         public string ReferralCode { get; set; }
         public bool IsReturn { get; set; }
+        public string CreationTime { get; set; }
+    }
+    public class PostLeaseDTO
+    {
+        public string CustomerAddress { get; set; }
+        public string CustomerFirstName { get; set; }
+        public string CustomerLastName { get; set; }
+        public string CustomerMiddleName { get; set; }
+        public string CustomerPhone { get; set; }
+        public string CustomerEmail { get; set; }
+        public Gender Gender { get; set; }
+        public string Title { get; set; }
+        public string OptionalPhoneNumber { get; set; }
+        public string ReferralCode { get; set; }
+        public string NextOfKinName { get; set; }
+        public string NextOfKinPhone { get; set; }
+        public DeliveryType DeliveryType { get; set; }
+        public int? CarId { get; set; }
+        public string DateOfBirth { get; set; }
+        public decimal? Amount { get; set; }
+        public decimal? TotalPaid { get; set; }
+        public decimal? VAT { get; set; }
+        public int Duration { get; set; }
+        public bool IsDue { get; set; }
+        public DurationType DurationType { get; set; }
+        public PaymentType PaymentType { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
+        public string Remark { get; set; }
+
     }
 }

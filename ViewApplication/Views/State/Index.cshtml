@@ -1,0 +1,174 @@
+﻿@model LocationDTO
+@{
+    ViewData["Title"] = "Get All States";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    var error = TempData["error"] as string;
+    var success = TempData["success"] as string;
+}
+<br />
+
+@if (!string.IsNullOrEmpty(error))
+{
+    <div class="alert alert-danger" style="padding: 10px">
+        @error
+    </div>
+}
+@if (!string.IsNullOrEmpty(success))
+{
+    <div class="alert alert-success" style="padding: 10px">
+        @success
+    </div>
+}
+<div class="container-fluid" style="border-radius:4px; background-color:gainsboro; text-align:right!important">
+    <br />
+    <h3 class="text-muted"><b>All States configured on this platform</b></h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+<br />
+<br />
+<button class="btn btn-success" onclick="return add()" style="float:right;"><i class="fa fa-plus-circle"></i> Add New State</button>
+
+<div id="" class="tabcontent">
+    <table id="Table1" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th> Name </th>
+                <th> Country </th>
+                <th> Created At</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="modal fade" id="viewtrips" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <form asp-action="AddStatePost" method="post">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"> <i class="fa fa-plus-circle"></i> Add New State </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="m-portlet__body">
+                        <div class="m-form__section m-form__section--first">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="form-label"> State Name: </label>
+                                    <input placeholder="Enter State Name" asp-for="StateName" name="StateName" id="StateName" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label>Country:</label>
+                                    <div class="m-input-icon m-input-icon--right">
+                                        <select asp-for="Country" id="Country" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<Country.eCountry>())">
+                                            <option value="">Select Country</option>
+                                        </select>
+                                        <div class="form-control-feedback"><span asp-validation-for="Country"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit"  class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </form>  
+</div>
+
+@section Styles
+{
+    <style>
+        .datepicker {
+            width: 16em !important;
+        }
+
+        .divrow {
+            border-radius: 4px;
+        }
+
+        .edit {
+            color: lightblue
+        }
+    </style>
+}
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $(".dropdown-select2").select2();
+        });
+
+        function add() {
+            $("#viewtrips").modal('show');
+            $("#viewtrips").modal();
+        }
+          var dataTable2; var dataTable1;
+        $(document).ready(function () {
+            dataTable2 = $("#Table1").DataTable({
+                "destroy": true,
+                "orderable": false,
+                "searchable": false,
+                "responsive": true,
+                "dom": 'lBfrtip',
+                "buttons": [
+                    {
+                        extend: 'csv',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'excel',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-secondary'
+                    },
+                    {
+                        extend: 'print',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-primary'
+                    }
+                ],
+                "ajax": {
+                    "url": "@Url.Action("GetAll", "State")",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    {
+                        "data": "stateId",
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    { "data": "stateName" },
+                    { "data": "countryName" },
+                    {
+                        "data": "creationTime",
+                        "render": function (d) {
+                            return moment(d).format('LLLL');
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No <b >data</b> found"
+                }
+            });
+        });
+
+    </script>
+}

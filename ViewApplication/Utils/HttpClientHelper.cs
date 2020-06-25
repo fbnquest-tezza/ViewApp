@@ -10,11 +10,18 @@ namespace ViewApplication.Utils
     {
         public static async Task<IServiceResponse<TResult>> PostAsJsonAsync<TModel, TResult>(this HttpClient client, string requestUri, TModel model)
         {
-            var response = await client.PostAsJsonAsync(requestUri, model);
+            try 
+            {
+                var response = await client.PostAsJsonAsync(requestUri, model);
+                response.EnsureSuccessStatusCode();
 
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsAsync<ServiceResponse<TResult>>();
+                return await response.Content.ReadAsAsync<ServiceResponse<TResult>>();
+            }
+            catch(Exception ex)
+            {
+                ex.Message.ToString();
+                return null;
+            }          
         }
 
         public static async Task<IServiceResponse<TResult>> DeleteAsync<TResult>(this HttpClient client, string requestUri)

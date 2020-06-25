@@ -1,0 +1,501 @@
+﻿@model FeedBackDTO
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    var error = TempData["error"] as string;
+}
+<br />
+<div class="card card-header" style="text-align:center !important">
+    <h4 style="text-align:right !important" class="text-muted"><b>All Feedbacks configured on this platform </b></h4>
+</div>
+<br /><br/>
+<div class="container-fluid">
+    <div class="card card-body form-row" style="text-align:right; float:right">
+        <div class="form-row">
+            <div>
+                <label class="control-label">Start Date: </label>
+                <div class="m-input-icon m-input-icon--right">
+                    <input class="form-control datepicker" type="text" placeholder="Enter Start Date" id="StartDate" autocomplete="off" />
+                </div>
+            </div> &nbsp;
+            <div>
+                <label class="control-label">End Date: </label>
+                <div class="m-input-icon m-input-icon--right">
+                    <input class="form-control datepicker" type="text" placeholder="Enter End Date" id="EndDate" autocomplete="off" />
+                </div>
+            </div>
+        </div><br/>
+              <div class="form-row">
+                  <div>
+                      <label>Replied Status :</label>
+                      <div class="m-input-icon m-input-icon--right">
+                          <select id="Status" class="form-control m-input dropdown-select2">
+                              <option value="">Select an Option</option>
+                              <option value="0">True</option>
+                              <option value="1">False</option>
+                          </select>
+                      </div>
+                  </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <div>
+                      <button type="button" style="margin-top:25px; " id="btnsearch" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                  </div>
+              </div>
+    </div>
+</div><br/><br/><br/><br/><br/><br/><br/>
+
+
+<div class="container-fluid">
+
+    <div id="Delete" class="tabcontent">
+        <table id="Table1" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th> Name </th>
+                    <th> Email </th>
+                    <th> Message</th>
+                    <th> Priority </th>
+                    <th> Creation Time</th>
+                    <th> Response </th>
+                    <th> Replied By </th>
+                    <th> Status</th>
+                    <th> Actions </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="modal fade" id="viewtrips" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="text-align:center">
+                    <h5 class="modal-title" id="exampleModalLabel">Reply Message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="m-portlet__body">
+                        <div class="m-form__section m-form__section--first">
+                            <input type="hidden" value="messageid" id="messageid" />
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="form-label"> Full Name: </label>
+                                    <input type="text" id="fullname" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="form-label"> Email: </label>
+                                    <input type="text" id="email" readonly class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="form-label"> Feedback: </label>
+                                    <textarea rows="4" cols="20" id="message" class="form-control" readonly style="min-height:100px !important"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label"> Replied Message:</label>
+                                <textarea rows="4" cols="20" id="repliedMessage" class="form-control" placeholder="Enter Reply" style="min-height:100px !important"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="replySend()" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="viewdetails" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="text-align:center">
+                <h5 class="modal-title" id="exampleModalLabel">Details </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="m-portlet__body">
+                    <div class="m-form__section m-form__section--first">
+                        <input type="hidden" value="messageid" id="messageiddet" />
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="form-label"> Full Name: </label>
+                                <input type="text" id="fullnamedet" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="form-label"> Email: </label>
+                                <input type="text" id="emaildet" readonly class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="form-label"> Feedback: </label>
+                                <textarea rows="4" cols="20" id="messagedet" class="form-control" readonly style="min-height:100px !important"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="form-label"> Priority: </label>
+                                <input type="text" id="prioritydet" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="form-label"> Created At: </label>
+                                <input type="text" id="createdAtdet" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="form-label"> Replied By: </label>
+                                <input type="text" id="repliedBydet" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"> Replied Message:</label>
+                            <textarea rows="4" cols="20" id="repliedMessagedet" class="form-control" readonly style="min-height:100px !important"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="replySend()" class="btn btn-success">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles
+{
+    <style>
+        .datepicker {
+            width: 16em !important;
+        }
+
+        .divrow {
+            border-radius: 4px;
+        }
+
+        body{
+            font-size:12.5px !important; 
+        }
+    </style>
+}
+@section Scripts{
+    <script>
+
+        $(".datepicker").datepicker({
+            format: "dd/mm/yyyy"
+        });
+
+        $(document).ready(function () {
+            $(".dropdown-select2").select2();
+        });
+
+        var dataTable2; var dataTable1;
+        $(document).ready(function () {
+            dataTable2 = $("#Table1").DataTable({
+                "destroy": true,
+                "orderable": false,
+                "searchable": false,
+                "responsive": true,
+                "dom": 'lBfrtip',
+                "buttons": [
+                    {
+                        extend: 'csv',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'excel',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-secondary'
+                    },
+                    {
+                        extend: 'print',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-primary'
+                    }
+                ],
+                "ajax": {
+                    "url": "@Url.Action("Getall", "feedback")",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    {
+                        "data": "id",
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    { "data": "fullName" },
+                    { "data": "email" },
+                    { "data": "message" },
+                    { "data": "priority" },
+                    {
+                        "data": "creationTime",
+                        "render": function (d) {
+                            return moment(d).format('LL');
+                        }
+                    },
+                    { "data": "repliedMessage" },
+                    { "data": "modifedBy" },
+                    { "data": "responded" },
+                    {
+                        render: function (a, t, data, n) {
+                            if (data.repliedMessage != null) {
+                                return `\n <div style="text-align: center">\n
+                                                                \n <div class="btn-group">\n
+                                                                    <button type="button" class="btn btn-primary dropdown-toggle" style="font-size: 13px;" data-toggle="dropdown">View More
+                                                                    <i class="fa fa-folder"></i>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu" style="text-align: center; min-width:100% !important" role="menu">
+                                                                     <li><a onclick="return viewDetails(`+ data.id + `)"> View Details <i class="fa fa-leaf"></i></a></li>
+                                                                       </ul>
+                                                               \n </div>\n`
+                            }
+                            else {
+                                return `\n <div style="text-align: center">\n
+                                                                \n <div class="btn-group">\n
+                                                                    <button type="button" class="btn btn-primary dropdown-toggle" style="font-size: 13px;" data-toggle="dropdown">View More
+                                                                    <i class="fa fa-folder"></i>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu" style="text-align: center; min-width:100% !important" role="menu">
+                                                                     <li><a onclick="return viewDetails(`+ data.id + `)"> View Details <i class="fa fa-leaf"></i></a></li>
+                                                                     <li><a onclick="return reply(`+ data.id + `)">Reply <i class="fa fa-edit"></i></a></li>
+                                                                       </ul>
+                                                               \n </div>\n`
+                            }
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No <b >data</b> found"
+                }
+            });
+            dataTable2.on('click', '.open-details-modal', function () {
+                var tr = $(this).closest("tr");
+                var data = dataTable2.row(tr).data();
+
+                var tmpl = $.templates("#details-modal-template");
+                var html = tmpl.render(data);
+                $("#details-modal-body").html(html);
+                $('#details-modal').modal('show')
+            })
+        });
+
+        function replySend() {
+            var id = $("#messageid").val();
+            var email = $("#email").val();
+            var repliedMessage = $("#repliedMessage").val();
+            var message = $("#message").val();
+            if (repliedMessage == "")
+            {
+                swal({ title: "", text: "All fields required", type: 'warning', width: '500px' });
+                return false;
+            }
+            $("#viewtrips").modal('hide');
+            $.blockUI({ message: '<h1>Processing...</h1>' });
+            $.ajax({
+                url: "../../feedback/replyfeedback",
+                method: "POST",
+                data: {
+                    id: id,
+                    email: email,
+                    repliedMessage: repliedMessage,
+                    message: message
+                },
+                success: function (data) {
+                    if (data === "success") {
+                        $.unblockUI();
+                        swal({ title: "", text: "Good Job", type: 'success', width: '500px' });
+                        setTimeout(function () {
+                            window.location.replace(window.location.href);
+                        }, 1500);
+                        window.location.reload(true);
+                    }
+                    else {
+                        $.unblockUI();
+                        swal(data, "", "warning");
+                    }
+                }
+            })
+        }
+
+        function reply(id) {
+            $.blockUI({ message: '<h1>Processing...</h1>' });
+            $.ajax({
+                url: "../../feedback/getFeedbackbyid/" + id + "",
+                method: "GET",
+                success: function (data) {
+                    if (data) {
+                        $.unblockUI();
+                        $("#viewtrips").modal('show');
+                        $("#viewtrips").modal();
+                        $("#messageid").val(id);
+                        $('#fullname').val(data.fullName);
+                        $('#email').val(data.email);
+                        $('#message').val(data.message);
+                        $('#repliedmessage').val(data.repliedmessage);
+                    }
+                }
+            })
+            //$(document).ajaxStop($.unblockUI);
+        }
+
+        function viewDetails(id) {
+            $.blockUI({ message: '<h1>Processing...</h1>' });
+            $.ajax({
+                url: "../../feedback/getFeedbackbyid/" + id + "",
+                method: "GET",
+                success: function (data) {
+                    if (data) {
+                        $.unblockUI();
+                        $("#viewdetails").modal('show');
+                        $("#viewdetails").modal();
+                        $("#messageiddet").val(id);
+                        $('#fullnamedet').val(data.fullName);
+                        $('#emaildet').val(data.email);
+                        $('#messagedet').val(data.message);
+                        $('#repliedMessagedet').val(data.repliedMessage);
+                        $('#createdAtdet').val(data.createdAt);
+                        $('#prioritydet').val(data.priority);
+                        $('#repliedBydet').val(data.modifedBy);
+                    }
+                }
+            })
+        }
+
+        $("#btnsearch").click(function () {
+            var startdate = $('#StartDate').val();
+            var enddate = $('#EndDate').val();
+            var status = $('#Status').val();
+            dataTable1 = $("#Table1").DataTable({
+                "destroy": true,
+                "orderable": false,
+                "searchable": false,
+                "responsive": true,
+                "dom": 'lBfrtip',
+                "buttons": [
+                    {
+                        extend: 'csv',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'excel',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-secondary'
+                    },
+                    {
+                        extend: 'print',
+                        messageTop: 'All Feedbacks',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        },
+                        className: 'btn btn-primary'
+                    }
+                ],
+                "ajax": {
+                    "url": "/feedback/search",
+                    "data": {
+                        startdate: startdate,
+                        enddate: enddate,
+                        status: status
+                    },
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columns": [
+                    {
+                        "data": "id",
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    { "data": "fullName" },
+                    { "data": "email" },
+                    { "data": "message" },
+                    { "data": "priority" },
+                    {
+                        "data": "creationTime",
+                        "render": function (d) {
+                            return moment(d).format('LL');
+                        }
+                    },
+                    { "data": "repliedMessage" },
+                    { "data": "modifedBy" },
+                    { "data": "responded" },
+                    {
+                        render: function (a, t, data, n) {
+                            if (data.repliedMessage != null) {
+                                return `\n <div style="text-align: center">\n
+                                                                \n <div class="btn-group">\n
+                                                                   <button type="button" class="btn btn-primary dropdown-toggle" style="font-size: 13px;" data-toggle="dropdown">View More
+                                                                    <i class="fa fa-folder"></i>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu" style="text-align: center; min-width:100% !important" role="menu">
+                                                                     <li><a onclick="return viewDetails(`+ data.id + `)"> View Details <i class="fa fa-leaf"></i></a></li>
+                                                                       </ul>
+                                                               \n </div>\n`}
+                            else {
+                                return `\n <div style="text-align: center">\n
+                                                                \n <div class="btn-group">\n
+                                                                    <button type="button" class="btn btn-primary dropdown-toggle" style="font-size: 13px;" data-toggle="dropdown">View More
+                                                                    <i class="fa fa-folder"></i>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu" style="text-align: center; min-width:100% !important" role="menu">
+                                                                     <li><a onclick="return viewDetails(`+ data.id + `)"> View Details <i class="fa fa-leaf"></i></a></li>
+                                                                     <li><a onclick="return reply(`+ data.id + `)">Reply <i class="fa fa-edit"></i></a></li>
+                                                                       </ul>
+                                                               \n </div>\n`
+                            }
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No <b >data</b> found"
+                }
+            });
+            dataTable1.on('click', '.open-details-modal', function () {
+                var tr = $(this).closest("tr");
+                var data = dataTable1.row(tr).data();
+
+                var tmpl = $.templates("#details-modal-template");
+                var html = tmpl.render(data);
+                $("#details-modal-body").html(html);
+                $('#details-modal').modal('show')
+            });
+            $('#StartDate').val('');
+            $('#EndDate').val('');
+        });
+
+
+    </script>
+}

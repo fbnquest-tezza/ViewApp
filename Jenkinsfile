@@ -9,9 +9,9 @@ pipeline {
 				}
 				stage('Nuget Package Restore'){
 					steps{
-					bat label: 'Update Nuget', script: 'nuget.exe update -self'
+					//bat label: 'Update Nuget', script: 'nuget.exe update -self'
 					
-					sleep time: 1, unit: 'MINUTES'
+					//sleep time: 1, unit: 'MINUTES'
 					
 					bat label: 'Restore Nuget', script: 'nuget restore .'
 					}

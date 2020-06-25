@@ -7,7 +7,7 @@ pipeline {
 						checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/fbnquest-tezza/ViewApp.git']]])
 					}
 				}
-				stage('Nuget Restore'){
+				stage('Nuget Package Restore'){
 					bat label: '', script: 'nuget restore .'
 				}
 				stage('Build') {

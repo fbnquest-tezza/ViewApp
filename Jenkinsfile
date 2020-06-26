@@ -28,19 +28,19 @@ pipeline {
 							sh """
 							dotnet build -c Release /p:Version=${BUILD_NUMBER} /p:Platform=“Any CPU”
 							//run the first dotnet build. If successsful, append and run the second build
-							dotnet build 
-							/p:DeployOnBuild=true  													
-							/p:SkipInvalidConfigurations=true 
-							/t:build 
-							/p:precompilebeforepublish=true							
-							/p:DeleteExistingFiles=True 
+				//			dotnet build 
+				//			/p:DeployOnBuild=true  													
+				//			/p:SkipInvalidConfigurations=true 
+				//			/t:build 
+				//			/p:precompilebeforepublish=true							
+				//			/p:DeleteExistingFiles=True 
 							//if successful, run the dotnet publish							
-							dotnet publish 
-							/p:DeployDefaultTarget=WebPublish 
-							/p:WebPublishMethod=MSDeploy   
-							/p:MSDeployPublishMethod=InProc   
-							/p:MSDeployServiceURL=localhost 
-							/p:DeployIisAppPath=“Default Web Site/CMS”
+				//			dotnet publish 
+				//			/p:DeployDefaultTarget=WebPublish 
+				//			/p:WebPublishMethod=MSDeploy   
+				//			/p:MSDeployPublishMethod=InProc   
+				//			/p:MSDeployServiceURL=localhost 
+				//			/p:DeployIisAppPath=“Default Web Site/CMS”
 									"""
 		}
 		}

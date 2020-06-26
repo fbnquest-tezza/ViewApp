@@ -3,7 +3,7 @@ node {
  //def svn_project_root = "https://example.com/svn/Repo/ToDoApp/trunk"
  def svn_project_root = "https://github.com/fbnquest-tezza/ViewApp.git"
  //def slnPath = "${WORKSPACE}\\trunk"
- def slnPath = "${WORKSPACE}\\ViewApp"
+ def slnPath = "${WORKSPACE}"
  //def slnName = "ToDoApp.sln"
  def slnName = "ViewApplication.sln"
  //def projPath = "ToDoApp"
@@ -39,7 +39,7 @@ node {
 
   dir(slnPath) {
    stage('Nuget Restore') {
-    bat " \"${nuget_path}\" config -set http_proxy=http://proxy.example.com:8080"
+    bat " \"${nuget_path}\" config -set http_proxy=http://localhost:8080"
     bat " \"${nuget_path}\" config -set http_proxy.user=${server_admin_userName}"
     bat " \"${nuget_path}\" config -set http_proxy.password=${server_admin_pwd}"
     bat " \"${nuget_path}\" restore \"${slnPath}\\${slnName}\" "

@@ -25,14 +25,14 @@ pipeline {
 				stage('Build restore') {
     					steps {
 						
-							sh " dotnet restore "
-							sh " dotnet build -c Release /p:Version=${BUILD_NUMBER}"
+							bat " dotnet restore "
+							bat " dotnet build -c Release /p:Version=${BUILD_NUMBER}"
 		}
 				}
 				stage('Build Deploy') {
     					steps {
 						
-							sh """
+							bat """
 							dotnet build -c Release /p:Version=${BUILD_NUMBER}
 							/p:DeployOnBuild=true 
 							/p:DeployDefaultTarget=WebPublish 

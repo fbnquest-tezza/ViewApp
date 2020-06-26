@@ -24,7 +24,11 @@ pipeline {
 				//}
 				stage('Build restore') {
     					steps {
-						bat "dotnet build -c Release /p:Version=${BUILD_NUMBER} /p:Platform=“Any CPU”"
+						bat """
+						dotnet build -c Release
+						/p:Version=${BUILD_NUMBER}
+						/p:Platform="Any CPU"
+						""""
 		}
 				}
 				

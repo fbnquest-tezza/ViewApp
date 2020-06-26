@@ -27,24 +27,14 @@ node {
 
  try {
   stage('Checkout') {
-   checkout([$class: 'SubversionSCM',
-    additionalCredentials: [],
-    excludedCommitMessages: '',
-    excludedRegions: '',
-    excludedRevprop: '',
-    excludedUsers: '',
-    filterChangelog: false,
-    ignoreDirPropChanges: false,
-    includedRegions: '',
-    locations: [
-     [credentialsId: "${svn_credentialId}",
-      depthOption: 'infinity',
-      ignoreExternalsOption: true,
-      remote: "${svn_project_root}"
-     ]
-    ],
-    workspaceUpdater: [$class: 'UpdateUpdater']
-   ])
+   checkout([
+   						$class: 'GitSCM',
+   						branches: [[name: '*/master']],
+   						doGenerateSubmoduleConfigurations: false,
+   						extensions: [],
+   						submoduleCfg: [],
+   						userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/fbnquest-tezza/ViewApp.git']]
+   						])
   }
 
   dir(slnPath) {
@@ -85,7 +75,7 @@ node {
 }
 
 def notify(status) {
- emailext(to: "dev_group@example.com",
+ emailext(to: "deleogold@gmail.com",
   subject: "${status}: Deployment job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
   body: "<p>${status}: Deployment Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p> <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>"
   )

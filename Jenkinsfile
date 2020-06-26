@@ -53,7 +53,9 @@ pipeline {
     				steps {
 						
 							
-						    bat "\"${tool 'MSBuild'}\" ViewApplication.sln
+						    bat """
+							
+							${tool 'MSBuild'} ViewApplication.sln
 							/p:DeployOnBuild=true
 							/p:DeployDefaultTarget=WebPublish 
 							/p:WebPublishMethod=MSDeploy 
@@ -65,7 +67,9 @@ pipeline {
 							/p:MSDeployPublishMethod=InProc   
 							/p:MSDeployServiceURL=localhost 
 							/p:DeployIisAppPath=“Default Web Site/CMS
-							/p:publishUrl=c:\\inetpub\\wwwroot\\CMS"
+							/p:publishUrl=c:\\inetpub\\wwwroot\\CMS
+							
+							"""
 							  
     					}
 			}

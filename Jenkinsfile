@@ -22,18 +22,12 @@ pipeline {
 					//bat label: 'Restore Nuget', script: 'nuget restore '
 					//}
 				//}
-				stage('Build restore') {
-    					steps {
-						
-							sh " dotnet restore "
-							sh " dotnet build -c Release /p:Version=${BUILD_NUMBER}"
-		}
-				}
+				
 				stage('Build Deploy') {
     					steps {
 						
 							sh """
-							
+							dotnet build -c Release /p:Version=${BUILD_NUMBER}
 							/p:DeployOnBuild=true 
 							/p:DeployDefaultTarget=WebPublish 
 							/p:WebPublishMethod=MSDeploy

@@ -22,41 +22,53 @@ pipeline {
 					//bat label: 'Restore Nuget', script: 'nuget restore '
 					//}
 				//}
-				stage('Build restore') {
+				stage('Donet restore') {
     					steps {
 						
 							bat """
 								dotnet restore 
 								dotnet build -c Release /p:Version=${BUILD_NUMBER}
-								dotnet build /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish
-								/p:WebPublishMethod=MSDeploy  
-								/p:SkipInvalidConfigurations=true 
-								/t:build 
-								/p:Configuration=Release 
-								/p:Platform=\"Any CPU\"
-								/p:DeleteExistingFiles=True
-								/p:publishUrl=c:\\inetpub\\wwwroot\\CMS"
-								dotnet publish -c Release --no-build
-								
-								
-								
-								dotnet publish 
-								/p:DeployDefaultTarget=WebPublish  
-								/p:MSDeployPublishMethod=InProc   
-								/p:MSDeployServiceURL=localhost 
-								/p:DeployIisAppPath=“Default Web Site/CMS”
+																					//			dotnet build /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish
+																					//			/p:WebPublishMethod=MSDeploy  
+																					//			/p:SkipInvalidConfigurations=true 
+																					//			/t:build 
+																					//			/p:Configuration=Release 
+																					//			/p:Platform=\"Any CPU\"
+																					//			/p:DeleteExistingFiles=True
+																					//			/p:publishUrl=c:\\inetpub\\wwwroot\\CMS"
+																					//			dotnet publish -c Release --no-build
+																								
+																								
+																								
+																					//			dotnet publish 
+																					//			/p:DeployDefaultTarget=WebPublish  
+																					//			/p:MSDeployPublishMethod=InProc   
+																					//			/p:MSDeployServiceURL=localhost 
+																					//			/p:DeployIisAppPath=“Default Web Site/CMS”
 							"""
 		}
-				}
+			}
 				
-				//stage('Build last') {
-    				//	steps {
+			stage('MSBuild') {
+    				steps {
 						
-							//bat "\"${tool 'MSBuild'}\" ViewApplication.sln /p:Configuration=Release /p:Platform=\"Any CPU\" /p:ProductVersion=1.0.0.${env.BUILD_NUMBER}"
 							
-							//				    bat "\"${tool 'MSBuild'}\" ViewApplication.sln /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:SkipInvalidConfigurations=true /t:build /p:Configuration=Release /p:Platform=\"Any CPU\" /p:DeleteExistingFiles=True /p:publishUrl=c:\\inetpub\\wwwroot"
-    				//	}
-			//	}
+						    bat "\"${tool 'MSBuild'}\" ViewApplication.sln
+							/p:DeployOnBuild=true
+							/p:DeployDefaultTarget=WebPublish 
+							/p:WebPublishMethod=MSDeploy 
+							/p:SkipInvalidConfigurations=true
+							/t:build 
+							/p:Configuration=Release 
+							/p:Platform=\"Any CPU\" 
+							/p:DeleteExistingFiles=True 	
+							/p:MSDeployPublishMethod=InProc   
+							/p:MSDeployServiceURL=localhost 
+							/p:DeployIisAppPath=“Default Web Site/CMS
+							/p:publishUrl=c:\\inetpub\\wwwroot\\CMS"
+							  
+    					}
+			}
 				
     //stage('Deploy'){
       //  steps{

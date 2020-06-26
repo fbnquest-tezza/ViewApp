@@ -22,29 +22,28 @@ pipeline {
 					//bat label: 'Restore Nuget', script: 'nuget restore '
 					//}
 				//}
-				
 				stage('Build Deploy') {
     					steps {
 						
 							sh """
-							dotnet build -c Release /p:Version=${BUILD_NUMBER}
-							/p:DeployOnBuild=true 
-							/p:DeployDefaultTarget=WebPublish 
-							/p:WebPublishMethod=MSDeploy
-							/p:MSDeployPublishMethod=InProc 
-							/p:MSDeployServiceURL=localhost 
-							/p:DeployIisAppPath=“Default Web Site/CMS”
+							dotnet build -c Release /p:Version=${BUILD_NUMBER} /p:Platform=“Any CPU”
+							//run the first dotnet build. If successsful, append and run the second build
+							dotnet build 
+							/p:DeployOnBuild=true  													
 							/p:SkipInvalidConfigurations=true 
 							/t:build 
-							/p:precompilebeforepublish=true
-							/t:publish 
-							/p:Configuration=Release 
-							/p:Platform=“Any CPU”
+							/p:precompilebeforepublish=true							
 							/p:DeleteExistingFiles=True 
-							/p:publishUrl=c:\\inetpub\\wwwroot\\CMS
+							//if successful, run the dotnet publish							
+							dotnet publish 
+							/p:DeployDefaultTarget=WebPublish 
+							/p:WebPublishMethod=MSDeploy   
+							/p:MSDeployPublishMethod=InProc   
+							/p:MSDeployServiceURL=localhost 
+							/p:DeployIisAppPath=“Default Web Site/CMS”
 									"""
 		}
-				}
+		}
 				
 
 			}

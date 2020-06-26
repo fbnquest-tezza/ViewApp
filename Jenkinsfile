@@ -1,3 +1,5 @@
+
+
 node {
  def svn_credentialId = "2d7f5f55-6dd2-5t6y-8b98-3a22817b70e4"
  //def svn_project_root = "https://example.com/svn/Repo/ToDoApp/trunk"
@@ -39,10 +41,10 @@ node {
 
   dir(slnPath) {
    stage('Nuget Restore') {
-    bat " \"${nuget_path}\" config -set http_proxy=http://localhost:8080"
-    bat " \"${nuget_path}\" config -set http_proxy.user=${server_admin_userName}"
-    bat " \"${nuget_path}\" config -set http_proxy.password=${server_admin_pwd}"
-    bat " \"${nuget_path}\" restore \"${slnPath}\\${slnName}\" "
+   // bat " \"${nuget_path}\" config -set http_proxy=http://localhost:8080"
+    //bat " \"${nuget_path}\" config -set http_proxy.user=${server_admin_userName}"
+    //bat " \"${nuget_path}\" config -set http_proxy.password=${server_admin_pwd}"
+    bat " \"${nuget_path}\" restore \"${slnPath}\\${slnName}\"  -source https://api.nuget.org/v3/index.json"
    }
 
    stage('Build & Package') {

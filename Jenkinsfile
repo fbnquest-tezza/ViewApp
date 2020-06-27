@@ -48,7 +48,25 @@ node {
    }
 //${projPath}\\
    stage('Build & Package') {
-    bat " \"${MsBuildPath}\" \"${projName}\" /T:Build;Package /p:Configuration=RELEASE /p:OutputPath=\"obj\\Release\" /p:DeployIIsAppPath=\"${IISWebPath}\" /p:VisualStudioVersion=12.0"
+    //bat " \"${MsBuildPath}\" \"${projName}\" /T:Build;Package /p:Configuration=RELEASE /p:OutputPath=\"obj\\Release\" /p:DeployIIsAppPath=\"${IISWebPath}\" /p:VisualStudioVersion=12.0"
+   						    bat """
+
+   							${tool 'MSBuild'} ViewApplication.sln
+   							/p:DeployOnBuild=true
+   							/p:DeployDefaultTarget=WebPublish
+   							/p:WebPublishMethod=MSDeploy
+   							/p:SkipInvalidConfigurations=true
+   							/t:build
+   							/p:Configuration=Release
+   							/p:Platform=\"Any CPU\"
+   							/p:DeleteExistingFiles=True
+   							/p:MSDeployPublishMethod=InProc
+   							/p:MSDeployServiceURL=localhost
+   							/p:DeployIisAppPath=\"Default Web Site/CMS
+   							/p:publishUrl=c:\\inetpub\\wwwroot\\CMS
+
+   							"""
+
    }
 
    stage('Archive Artifacts') {

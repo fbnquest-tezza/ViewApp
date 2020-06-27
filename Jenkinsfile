@@ -46,9 +46,9 @@ node {
     //bat " \"${nuget_path}\" config -set http_proxy.password=${server_admin_pwd}"
     bat " \"${nuget_path}\" restore \"${slnPath}\\${slnName}\"  -source https://api.nuget.org/v3/index.json"
    }
-
+//${projPath}\\
    stage('Build & Package') {
-    bat " \"${MsBuildPath}\" \"${projPath}\\${projName}\" /T:Build;Package /p:Configuration=RELEASE /p:OutputPath=\"obj\\Release\" /p:DeployIIsAppPath=\"${IISWebPath}\" /p:VisualStudioVersion=12.0"
+    bat " \"${MsBuildPath}\" \"${projName}\" /T:Build;Package /p:Configuration=RELEASE /p:OutputPath=\"obj\\Release\" /p:DeployIIsAppPath=\"${IISWebPath}\" /p:VisualStudioVersion=12.0"
    }
 
    stage('Archive Artifacts') {

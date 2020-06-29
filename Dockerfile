@@ -1,17 +1,45 @@
-FROM jenkins/jenkins:lts
+#FROM mcr.microsoft.com/dotnet/core/runtime:2.2-stretch-slim AS base
+#FROM mcr.microsoft.com/dotnet/core/runtime:3.1.0 AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS base
+#FROM microsoft/aspnetcore:2.0 AS base
+WORKDIR /app
 
-USER root
-
-RUN wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-RUN dpkg -i packages-microsoft-prod.deb
-
-RUN apt-get update; \
-apt-get install -y apt-transport-https && \
-apt-get update && \
-apt-get install -y dotnet-sdk-3.1
+EXPOSE 9000
 
 
-RUN apt-get update; \
-apt-get install -y apt-transport-https && \
-apt-get update && \
-apt-get install -y aspnetcore-runtime-3.1
+#FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+
+#FROM microsoft/aspnetcore-build:2.0 AS build
+
+WORKDIR /src
+COPY *.sln ./
+COPY ViewApplication/ViewApplication.csproj ViewApplication/
+
+RUN dotnet restore
+#RUN dotnet restore "./ViewApplication.csproj"
+
+COPY . .
+
+#WORKDIR "/src/."
+WORKDIR "/src/ViewApplication"
+
+#RUN dotnet build "ViewApplication.csproj" -c Release -o /app/build
+RUN dotnet build  -c Release -o /app/build
+
+
+
+FROM build AS publish
+
+#RUN dotnet publish "ProjectName.csproj" -c Release -o /app/publish
+RUN dotnet publish -c Release -o /app/publish
+
+
+
+FROM base AS final
+
+WORKDIR /app
+
+COPY --from=publish /app/publish .
+
+ENTRYPOINT ["dotnet", "ViewApplication.dll"]

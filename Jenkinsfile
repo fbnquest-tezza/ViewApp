@@ -1,6 +1,8 @@
 //def ReleaseDir = "c:\inetpub\wwwroot"
 pipeline {
-    agent none
+    agent {
+        label 'master'
+    }
 
     environment {
         PROJECT_NAME = 'ViewApplication'

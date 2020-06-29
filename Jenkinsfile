@@ -6,8 +6,8 @@ pipeline {
         PROJECT_NAME = 'ViewApplication'
         DOMAIN = 'mydomain.com'
         STACK = 'asp.net'
-//        DOCKER_REGISTRY = 'https://registry-1.docker.io/v2/'
-        DOCKER_REGISTRY = 'https://index.docker.io/v1/'
+        DOCKER_REGISTRY = 'https://registry-1.docker.io/v2/'
+//        DOCKER_REGISTRY = 'https://index.docker.io/v1/'
         CONTAINER = 'fbnquest'
         VERSION = "1.${BUILD_NUMBER}"
     }

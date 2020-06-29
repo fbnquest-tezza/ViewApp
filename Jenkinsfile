@@ -10,7 +10,7 @@ pipeline {
         STACK = 'asp.net'
         DOCKER_REGISTRY = 'https://registry-1.docker.io/v2/'
 //        DOCKER_REGISTRY = 'https://index.docker.io/v1/'
-        CONTAINER = 'fbnquest'
+        CONTAINER = 'henryodinaka/viewApp'
         VERSION = "1.${BUILD_NUMBER}"
     }
 //    try {

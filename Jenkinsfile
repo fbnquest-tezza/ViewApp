@@ -5,6 +5,7 @@ pipeline {
     }
 
     environment {
+//        PATH = "C:\\Program Files\\Git\\usr\\bin;C:\\Program Files\\Git\\bin;${env.PATH}"
         PROJECT_NAME = 'ViewApplication'
         DOMAIN = 'mydomain.com'
         STACK = 'asp.net'
@@ -34,7 +35,7 @@ pipeline {
                         docker.withRegistry("${DOCKER_REGISTRY}", 'docker-registry') {
                         def img = docker.build("${CONTAINER}:${VERSION}")
                         img.push()
-                        sh "docker rmi ${img.id}"
+                        bat "docker rmi ${img.id}"
                     }
                 }
             }

@@ -10,7 +10,7 @@ pipeline {
         CONTAINER = 'fbnquest'
         VERSION = "1.${BUILD_NUMBER}"
     }
-    try {
+//    try {
         stages {
             stage('Checkout from GitSCM') {
                 steps {
@@ -61,10 +61,10 @@ pipeline {
             }
 
         }
-    } catch (err) {
-//        notify("Error occured in one of the build stages ${err}")er
-        currentBuild.result = 'FAILURE'
-    }
+//    } catch (err) {
+////        notify("Error occured in one of the build stages ${err}")er
+//        currentBuild.result = 'FAILURE'
+//    }
 }
 
 def notify(status) {

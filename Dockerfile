@@ -1,45 +1,23 @@
-#FROM mcr.microsoft.com/dotnet/core/runtime:2.2-stretch-slim AS base
-#FROM mcr.microsoft.com/dotnet/core/runtime:3.1.0 AS base
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS base
-#FROM microsoft/aspnetcore:2.0 AS base
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
 WORKDIR /app
 
-EXPOSE 9000
+# COPY *.csproj ./
 
 
-#FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
-
-#FROM microsoft/aspnetcore-build:2.0 AS build
-
-WORKDIR /src
-COPY *.sln ./
-COPY ViewApplication/ViewApplication.csproj ViewApplication/
+COPY ./*.sln ./
+COPY ./*/*.csproj ./
+RUN for file in $(ls *.csproj); do mkdir -p ./${file%.*}/ && mv $file ./${file%.*}/; done
 
 RUN dotnet restore
-#RUN dotnet restore "./ViewApplication.csproj"
 
-COPY . .
+COPY . ./
 
-#WORKDIR "/src/."
-WORKDIR "/src/ViewApplication"
+RUN dotnet test --verbosity=normal --results-directory /UnitTests/ --logger "trx;LogFileName=test_results.xml" ./UnitTests/UnitTests.csproj
 
-#RUN dotnet build "ViewApplication.csproj" -c Release -o /app/build
-RUN dotnet build  -c Release -o /app/build
+RUN dotnet publish ./ViewApplication/ViewApplication.csproj -c Release -o out
 
-
-
-FROM build AS publish
-
-#RUN dotnet publish "ProjectName.csproj" -c Release -o /app/publish
-RUN dotnet publish -c Release -o /app/publish
-
-
-
-FROM base AS final
-
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine
 WORKDIR /app
-
-COPY --from=publish /app/publish .
-
+COPY --from=build-env /app/out .
+# COPY --from=build-env /UnitTests /UnitTests
 ENTRYPOINT ["dotnet", "ViewApplication.dll"]

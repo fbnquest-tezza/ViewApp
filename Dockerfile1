@@ -1,0 +1,36 @@
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS base
+
+WORKDIR /app
+
+EXPOSE 9000
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+
+WORKDIR /src
+# COPY *.sln ./
+COPY ViewApplication/ViewApplication.csproj ./
+COPY UnitTests/UnitTests.csproj ./
+
+RUN dotnet restore
+#RUN dotnet restore "./ViewApplication.csproj"
+
+COPY . .
+
+RUN dotnet test --verbosity=normal --results-directory /TestResults/ --logger "trx;LogFileName=test_results.xml" ./UnitTests/UnitTests.csproj
+
+WORKDIR "/src/ViewApplication"
+
+#RUN dotnet build "ViewApplication.csproj" -c Release -o /app/build
+RUN dotnet build  -c Release -o /app/build
+FROM build AS publish
+
+#RUN dotnet publish "ProjectName.csproj" -c Release -o /app/publish
+RUN dotnet publish -c Release -o /app/publish
+
+FROM base AS final
+
+WORKDIR /app
+
+COPY --from=publish /app/publish .
+COPY --from=build /TestResults /TestResults
+
+ENTRYPOINT ["dotnet", "ViewApplication.dll"]

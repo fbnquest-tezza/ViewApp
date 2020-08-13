@@ -12,7 +12,7 @@ pipeline {
         STACK = 'asp.net'
         // DOCKER_REGISTRY = 'https://registry-1.docker.io/v2/'
        DOCKER_REGISTRY = 'http://192.168.50.9:5000/v2/'
-        CONTAINER = 'localhost:5000/viewapp'
+        CONTAINER = 'viewapp'
         VERSION = "1.${BUILD_NUMBER}"
     }
 //    try {

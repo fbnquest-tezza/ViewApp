@@ -34,7 +34,7 @@ pipeline {
                 steps {
                     script {
                         docker.withRegistry("${DOCKER_REGISTRY}", 'docker-registry') {
-                        def img = docker.build("${CONTAINER}:${VERSION}")
+                        img = docker.build("${CONTAINER}:${VERSION}")
                         img.push()
                         bat "docker rmi ${img.id}"
                     }

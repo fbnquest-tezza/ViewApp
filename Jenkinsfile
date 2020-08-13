@@ -43,7 +43,8 @@ pipeline {
         }
         stage( 'Pusblish UT Reports'){
             steps{
-                containerID = sh (
+                script {
+                    containerID = sh (
                     script: "docker run -d accountownerapp:B${BUILD_NUMBER}", 
                 returnStdout: true
                 ).trim()
@@ -52,6 +53,7 @@ pipeline {
                 sh "docker stop ${containerID}"
                 sh "docker rm ${containerID}"
                 step([$class: 'MSTestPublisher', failOnError: false, testResultsFile: 'test_results.xml'])    
+                }
       
             }
         }

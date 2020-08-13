@@ -1,4 +1,5 @@
 //def ReleaseDir = "c:\inetpub\wwwroot"
+def img
 pipeline {
     agent {
         label 'master'
@@ -9,9 +10,9 @@ pipeline {
         PROJECT_NAME = 'ViewApplication'
         DOMAIN = 'mydomain.com'
         STACK = 'asp.net'
-        DOCKER_REGISTRY = 'https://registry-1.docker.io/v2/'
-//        DOCKER_REGISTRY = 'https://index.docker.io/v1/'
-        CONTAINER = 'henryodinaka/viewapp'
+        // DOCKER_REGISTRY = 'https://registry-1.docker.io/v2/'
+       DOCKER_REGISTRY = 'http://192.168.50.9:5000/v2/'
+        CONTAINER = 'localhost:5000/viewapp'
         VERSION = "1.${BUILD_NUMBER}"
     }
 //    try {
@@ -38,6 +39,20 @@ pipeline {
                         bat "docker rmi ${img.id}"
                     }
                 }
+            }
+        }
+        stage( 'Pusblish UT Reports'){
+            steps{
+                containerID = sh (
+                    script: "docker run -d accountownerapp:B${BUILD_NUMBER}", 
+                returnStdout: true
+                ).trim()
+                echo "Container ID is ==> ${containerID}"
+                sh "docker cp ${containerID}:/TestResults/test_results.xml test_results.xml"
+                sh "docker stop ${containerID}"
+                sh "docker rm ${containerID}"
+                step([$class: 'MSTestPublisher', failOnError: false, testResultsFile: 'test_results.xml'])    
+      
             }
         }
             stage('Approval - QA Deploy') {
